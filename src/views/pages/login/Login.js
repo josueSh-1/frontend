@@ -15,10 +15,16 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
+import afueras from '../../../assets/images/afueras.jpg'
 
 const Login = () => {
   return (
-    <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
+    <div className="min-vh-100 d-flex flex-row align-items-center"
+    style={{
+      backgroundImage: `url(${afueras})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+    }}>
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={8}>
@@ -32,7 +38,7 @@ const Login = () => {
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="username" />
+                      <CFormInput type="Email" placeholder="Email" autoComplete="Email" />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
@@ -46,33 +52,25 @@ const Login = () => {
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4">
+                        <CButton color="primary" className="px-5">
                           Login
                         </CButton>
                       </CCol>
-                      <CCol xs={6} className="text-right">
-                        <CButton color="link" className="px-0">
+                      <CCol xs={6} className="text-right" >
+                        <CButton color="link" className="pl-5">
                           Forgot password?
                         </CButton>
                       </CCol>
                     </CRow>
-                  </CForm>
-                </CCardBody>
-              </CCard>
-              <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
-                <CCardBody className="text-center">
-                  <div>
-                    <h2>Sign up</h2>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                      tempor incididunt ut labore et dolore magna aliqua.
-                    </p>
-                    <Link to="/register">
-                      <CButton color="primary" className="mt-3" active tabIndex={-1}>
+                    <div className='text-center mt-4'>
+                          <p className='mb-0'>Do you not have an account?</p>
+                        <Link to="/register">
+                        <CButton color="link" className="px-0">
                         Register Now!
-                      </CButton>
-                    </Link>
-                  </div>
+                         </CButton>
+                        </Link>
+                        </div>
+                  </CForm>
                 </CCardBody>
               </CCard>
             </CCardGroup>
