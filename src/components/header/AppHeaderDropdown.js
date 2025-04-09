@@ -23,11 +23,11 @@ const AppHeaderDropdown = () => {
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0 pe-0" caret={false}>
-        <CIcon icon={cilUser} className="me-2" />
+        <CIcon icon={cilUser} size='lg' className='mt-2'/>
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
         <CDropdownHeader className="bg-body-secondary fw-semibold my-2">Settings</CDropdownHeader>
-        <CDropdownItem  onClick={() => navigate('/login')}>
+        <CDropdownItem  onClick={() => navigate('/login')} style={{ cursor: 'pointer'}}>
           <CIcon icon={cilUserPlus} className="me-2" />
           Sign up/Log in
         </CDropdownItem>
