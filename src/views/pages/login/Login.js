@@ -12,23 +12,21 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilEnvelopeLetter, cilLockLocked, cilUser, cilX } from '@coreui/icons'
+import '../../../scss/style.scss'
 import afueras from '../../../assets/images/afueras.jpg'
 
 const Login = () => {
   const navigate = useNavigate()
-  //Manejo por pasos
-  const [step,setStep]= useState(0)
-
-  const forgotPassword= () =>{
-   setStep(1) //1 muestra formulario de olvido
-  } 
-
-  const login= () =>{
-    setStep(0) //0 muestra formulario de login
-  }
+  const[visible,setVisible]=useState(false)
+  const[visible2,setVisible2]=useState(false)
 
   return (
     <div className="min-vh-100 d-flex flex-row align-items-center"
@@ -37,16 +35,69 @@ const Login = () => {
       backgroundSize: 'cover',
       backgroundPosition: 'center',
     }}>
+       <CModal
+        visible={visible}
+        onClose={() => setVisible(false)}
+        aria-labelledby="Modal_Password">
+        <CModalHeader>
+          <CModalTitle id="Modal_Password">Forgot Password</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <p>Please enter your email to reset your password.</p>
+          <CInputGroup>
+            <CInputGroupText>
+              <CIcon icon={cilUser}/>
+            </CInputGroupText>
+            <CFormInput type='email' placeholder='Email' autoComplete='email'/>
+          </CInputGroup>
+        </CModalBody>
+        <CModalFooter>
+          <CButton
+            color="primary"
+            onClick={() => {
+              setVisible(false)
+              setVisible2(true)
+            }}
+          >
+            Send Link
+          </CButton>
+        </CModalFooter>
+      </CModal>
+      <CModal
+        visible={visible2}
+        onClick={() => {
+          setVisible(true)
+          setVisible2(false)
+        }}
+        aria-labelledby="ToggleBetweenModalsExample2"
+      >
+        <CModalHeader>
+          <CModalTitle id="ToggleBetweenModalsExample2">Your Reset Link Password was sending to you!</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <p>Please check your email to access the link.</p>
+        </CModalBody>
+        <CModalFooter>
+          <CButton
+            color="primary"
+            onClick={() => {
+              setVisible(true)
+              setVisible2(false)
+            }}
+          >
+            Close
+          </CButton>
+        </CModalFooter>
+      </CModal>
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={8}>
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                  {step == 0 ?(
                      <CForm>
                      <div className='d-flex justify-content-end'>
-                       <CIcon icon={cilX} size='lg' onClick={() =>navigate('/')} style={{cursor: 'pointer'}}></CIcon>
+                       <CIcon icon={cilX} size='xl' onClick={() =>navigate('/')} className='x_nav'></CIcon>
                      </div>
                      <h1>Login</h1>
                      <p className="text-body-secondary">Sign In to your account</p>
@@ -73,7 +124,7 @@ const Login = () => {
                          </CButton>
                        </CCol>
                        <CCol xs={6} className='text-end'>
-                         <CButton color="link" onClick={forgotPassword}>
+                         <CButton color="link" onClick={() => setVisible(true)}>
                            Forgot password?
                          </CButton>
                        </CCol>
@@ -87,32 +138,6 @@ const Login = () => {
                          </Link>
                      </div>
                    </CForm>
-                    ) : (
-                      //Formulario de olvido
-                      <CForm>
-                        <div className='d-flex justify-content-end'>
-                         <CIcon icon={cilX} size='lg' onClick={() =>navigate('/')} style={{cursor: 'pointer'}}></CIcon>
-                        </div>
-                        <h2>Reset Password</h2>
-                        <p>Enter your Email account to receibe a reset link</p>
-                        <CInputGroup className='mb-4'>
-                          <CInputGroupText>
-                            <CIcon icon={cilEnvelopeLetter}/>
-                          </CInputGroupText>
-                          <CFormInput type='email' placeholder='Email' autoComplete='email'/>
-                        </CInputGroup>
-                        <div className='d-flex justify-content-center'>
-                          <CButton color='primary' type='submit' className='px-5'>Reset Link</CButton>
-                        </div>
-                        <div className='text-center mt-4'>
-                          <p className='mb-0'>You remember you password?</p>
-                          <CButton color='link' onClick={login}>
-                            Log in Here!
-                          </CButton>
-                        </div>
-                      </CForm>
-                    )
-                  }
                 </CCardBody>
               </CCard>
             </CCardGroup>

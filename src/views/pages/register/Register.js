@@ -15,19 +15,20 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser, cilX, cilCalendar } from '@coreui/icons'
 import afueras from '../../../assets/images/afueras.jpg'
-
+import '../../../scss/style.scss'
+import classNames from 'classnames'
 
 const Register = () => {
   const navigate = useNavigate();
 
-    //Estados de contraseña vacios
+    //Estados de contraseña 
   const [password, setPassword]= useState('')
   const [confirmPassword, setConfirmPassword]= useState('')
   const [passwordMatch, setPasswordMatch]=useState(true)
   
-    //Confirmacion de texto en confirm
+    //Validacion de contraseñas iguales
 
-const confirmPasswords= (e) =>{
+const handleconfirmPasswords= (e) =>{
   e.preventDefault()
   if(password!==confirmPassword){
     alert('The Password doesnt match')
@@ -48,9 +49,9 @@ const confirmPasswords= (e) =>{
           <CCol md={9} lg={7} xl={6}>
             <CCard className="mx-4">
               <CCardBody className="p-4">
-                <CForm onSubmit={confirmPasswords}>
+                <CForm onSubmit={handleconfirmPasswords}>
                   <div className='d-flex justify-content-end'>
-                   <CIcon icon={cilX} size='lg' onClick={() =>navigate('/')} style={{cursor: 'pointer'}}></CIcon>
+                   <CIcon icon={cilX} size='xl' onClick={() =>navigate('/')} className='x_nav' ></CIcon>
                   </div>
                   <h1>Register</h1>
                   <p className="text-body-secondary">Create your account</p>
