@@ -50,12 +50,14 @@ const Alerts = React.lazy(() => import('./views/notifications/alerts/Alerts'))
 const Badges = React.lazy(() => import('./views/notifications/badges/Badges'))
 const Modals = React.lazy(() => import('./views/notifications/modals/Modals'))
 const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
-const Login = React.lazy(() => import('./views/pages/login/Login'))
 
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
+const Visits = React.lazy(() => import('./views/pages/visits/visits'))
+
 const routes = [
   { path: '/', exact: true, name: 'Home' },
+  { path: '/visits' , name: 'Visits', element: Visits },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
