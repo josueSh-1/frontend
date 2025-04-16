@@ -11,4 +11,4 @@ const Visits = () => {
   )
 }
 
-export default Visits;
+export default Visits
