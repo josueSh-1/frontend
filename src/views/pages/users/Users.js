@@ -8,10 +8,30 @@ const Users = () => {
     const[selectUser,setSelectUser]=useState(null)
     //Arreglo de Usuarios
     const[users,setUsers]=useState([
-        { first_name: 'Mark', last_name: 'Otto', email: '@mdo', phone: '555-123',_cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'} } },
-        { first_name: 'Jacob', last_name: 'Thornton', email: '@fat', phone: '555-321',_cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5' }}, },
-        { first_name: 'Larry', last_name: 'Gonzales', email: '@twitter', phone:'555-132',_cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}}, },
-    ])
+      { first_name: 'Mark', last_name: 'Otto', email: 'mark@mdo.com', phone: '555-123', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'} } },
+      { first_name: 'Jacob', last_name: 'Thornton', email: 'jacob@fat.com', phone: '555-321', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5' }}, },
+      { first_name: 'Larry', last_name: 'Gonzales', email: 'larry@twitter.com', phone:'555-132', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}}, },
+      { first_name: 'John', last_name: 'Doe', email: 'john@doe.com', phone: '555-456', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
+      { first_name: 'Jane', last_name: 'Smith', email: 'jane@smith.com', phone: '555-789', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
+      { first_name: 'Robert', last_name: 'Johnson', email: 'robert@johnson.com', phone: '555-987', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
+      { first_name: 'Emily', last_name: 'Williams', email: 'emily@williams.com', phone: '555-654', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
+      { first_name: 'Michael', last_name: 'Brown', email: 'michael@brown.com', phone: '555-321', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
+      { first_name: 'Sarah', last_name: 'Jones', email: 'sarah@jones.com', phone: '555-876', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
+      { first_name: 'David', last_name: 'Garcia', email: 'david@garcia.com', phone: '555-234', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
+      { first_name: 'Jessica', last_name: 'Miller', email: 'jessica@miller.com', phone: '555-567', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
+      { first_name: 'James', last_name: 'Davis', email: 'james@davis.com', phone: '555-890', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
+      { first_name: 'Lisa', last_name: 'Rodriguez', email: 'lisa@rodriguez.com', phone: '555-432', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
+      { first_name: 'Daniel', last_name: 'Martinez', email: 'daniel@martinez.com', phone: '555-765', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
+      { first_name: 'Amanda', last_name: 'Hernandez', email: 'amanda@hernandez.com', phone: '555-098', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
+      { first_name: 'Christopher', last_name: 'Lopez', email: 'chris@lopez.com', phone: '555-543', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
+      { first_name: 'Ashley', last_name: 'Wilson', email: 'ashley@wilson.com', phone: '555-876', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
+      { first_name: 'Matthew', last_name: 'Anderson', email: 'matt@anderson.com', phone: '555-210', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
+      { first_name: 'Jennifer', last_name: 'Thomas', email: 'jennifer@thomas.com', phone: '555-543', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
+      { first_name: 'Joshua', last_name: 'Taylor', email: 'josh@taylor.com', phone: '555-876', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
+      { first_name: 'Elizabeth', last_name: 'Moore', email: 'liz@moore.com', phone: '555-109', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
+      { first_name: 'Andrew', last_name: 'Jackson', email: 'andrew@jackson.com', phone: '555-432', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
+      { first_name: 'Nicole', last_name: 'White', email: 'nicole@white.com', phone: '555-765', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
+  ])
 
     const columns = [
         {  key: 'first_name', label: 'First Name',_props: { scope: 'col', className:'fs-4' }, },
@@ -25,7 +45,7 @@ const Users = () => {
         setSelectUser({...users})
         setVisible2(true)
     }
-    const handelDeleteClick=(users)=>{
+    const handleDeleteClick=(users)=>{
         setSelectUser({...users})
         setVisible(true)
     }
@@ -38,7 +58,7 @@ const Users = () => {
     const handleEditAction=()=>{
         setUsers(users.map((users)=> users.email === selectUser.email ? {...selectUser, _cellProps: users._cellProps}:users))
         setVisible2(false)
-        selectUser(null)
+        setSelectUser(null)
     }
 
   return (
@@ -52,7 +72,7 @@ const Users = () => {
             actions: (
                 <div className='d-flex gap-3'>
                 <CButton color='primary'  onClick={()=>handleEditClick(users)}>Edit</CButton>
-                <CButton color='danger'  onClick={()=>handelDeleteClick(users)}>Delete</CButton>
+                <CButton color='danger'  onClick={()=>handleDeleteClick(users)}>Delete</CButton>
                 </div>
             )}))}
             striped hover responsive align='middle' className='mb-0'
