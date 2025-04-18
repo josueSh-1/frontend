@@ -1,9 +1,18 @@
 import React, {useState} from 'react'
 import { CCard, CCardBody, CPagination, CPaginationItem,CCardHeader, CButton, CTable, CModal, CModalHeader, CModalBody, CModalFooter,CForm, CFormInput } from '@coreui/react'
+import CIcon from '@coreui/icons-react'
+import { cilUser } from '@coreui/icons'
 
 const Users = () => {
     const[visible,setVisible]=useState(false)
     const[visible2,setVisible2]=useState(false)
+    const[visible3,setVisible3]=useState(false)
+    const [newUser,setNewUser]=useState({
+      first_name:'',
+      last_name:'',
+      email:'',
+      phone:'',
+    })
     //Seleccion de Usuario Vacia
     const[selectUser,setSelectUser]=useState(null)
     //Arreglo de Usuarios
@@ -49,7 +58,15 @@ const Users = () => {
         setSelectUser({...users})
         setVisible(true)
     }
-
+    const handleCreateClick=()=>{
+      setNewUser({
+        first_name:'',
+        last_name:'',
+        email:'',
+        phone:''
+      })
+      setVisible3(true)
+    }
     const handleDeleteAction=()=>{
         setUsers(users.filter((users) => users.email !== selectUser.email))
         setVisible(false)
@@ -60,11 +77,26 @@ const Users = () => {
         setVisible2(false)
         setSelectUser(null)
     }
-
+    const handleCreateAction=()=>{
+      setUsers([...users, { ...newUser, _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'} } }])
+      setNewUser({
+        first_name:'',
+        last_name:'',
+        email:'',
+        phone:''
+      })
+      setVisible3(false)
+    }
+    
   return (
     <CCard>
     <CCardHeader className='d-flex justify-content-between align-items-center'>
-        <h2>List of Users</h2>
+        <h1>List of Users</h1>
+        <CButton onClick={handleCreateClick} color='info' variant='outline'>
+          <CIcon icon={cilUser} size='lg'/> Add +</CButton>
+    </CCardHeader>
+    <CCardHeader>
+      <p>APARTADO DE FILTRACION</p>
     </CCardHeader>
       <CCardBody>
         <CTable columns={columns} items={users.map(users =>(
@@ -79,7 +111,7 @@ const Users = () => {
             />
       </CCardBody>
       <div className='d-flex justify-content-center'>
-      <CPagination size="lg" aria-label='Page navigation example' className='content-align-center'>
+      <CPagination size="lg" aria-label='Page navigation example' className='content-align-center' onClick={handleEditClick} style={{cursor:'pointer'}}>
         <CPaginationItem aria-label="Previous">
         <span aria-hidden="true">&laquo;</span>
         </CPaginationItem>
@@ -102,9 +134,8 @@ const Users = () => {
         </CModalFooter>
         </CModalBody>
       </CModal>
-
       <CModal visible={visible2} onClose={()=> setVisible2(false)}>
-        <CModalHeader>Edit User: {selectUser?.first_name}</CModalHeader>
+        <CModalHeader>Editing the User: {selectUser?.first_name}</CModalHeader>
         <CModalBody>
         {selectUser && (
         <CForm>
@@ -132,7 +163,43 @@ const Users = () => {
         <CModalFooter>
             <CButton color='primary' onClick={handleEditAction}>Update</CButton>
         </CModalFooter>
-      </CModal> 
+      </CModal>
+      <CModal visible={visible3} onClose={()=>setVisible3(false)} className='mt-5'>
+        <CModalHeader>
+          <h3>Creating a User</h3>
+        </CModalHeader>
+        <CModalBody>
+          <CForm>
+            <CFormInput 
+            label="First Name"
+            value={newUser.first_name}
+            onChange={(e)=>setNewUser({...newUser, first_name: e.target.value})}
+            className="mb-3"
+            />
+            <CFormInput 
+            label="Last Name"
+            value={newUser.last_name}
+            onChange={(e)=>setNewUser({...newUser, last_name: e.target.value})}
+            className="mb-3"
+            />
+            <CFormInput
+            label="Email"
+            value={newUser.email}
+            onChange={(e)=>setNewUser({...newUser, email: e.target.value})}
+            className="mb-3"
+            />
+            <CFormInput
+            label="Phone"
+            value={newUser.phone}
+            onChange={(e)=>setNewUser({...newUser, phone: e.target.value})}
+            className="mb-3"
+            />
+          </CForm>
+        </CModalBody>
+        <CModalFooter>
+          <CButton onClick={handleCreateAction}>Create</CButton>
+        </CModalFooter>
+      </CModal>
     </CCard>
   )
 }
