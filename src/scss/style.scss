@@ -70,3 +70,14 @@ body {
   cursor: pointer;
   color: white;
 }
+
+.card_resident {
+  cursor: pointer;
+  border: 2px;
+  transition: transform 0.2s ease-in-out;
+  text-align: center;
+  &:hover {
+    transform: scale(1.02);
+    border-color: $primary 
+  }
+}
