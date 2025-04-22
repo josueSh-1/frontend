@@ -17,11 +17,10 @@ const Visits = () => {
     end_time:''
   })
   const [events, setEvents] = useState([ ])
-  const [selectEvent, setSelectEvent] = useState(null)
   const handleDateClick = (arg) => {
     setNewEvent({...newEvent, date: arg.dateStr})
     setVisible(true); 
-  };
+  }
   const handleCreateEvent = () => {
     const event={
       title: newEvent.title,
@@ -33,7 +32,7 @@ const Visits = () => {
     setEvents([...events, newEvent])
     setNewEvent({title:'', date:'', description:'', start_time:'', end_time:''})
     setVisible(false)
-  };
+  }
   return (
     <>
       <FullCalendar
@@ -44,7 +43,7 @@ const Visits = () => {
         eventContent={renderEventContent}
         events={events} 
       />
-      <CModal visible={visible} onClose={() => setVisible(false)} className=''>
+      <CModal visible={visible} onClose={() => setVisible(false)}>
         <CModalHeader><h2>Creating a New Event</h2></CModalHeader>
         <CModalBody>
           <CForm>
