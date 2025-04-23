@@ -81,3 +81,45 @@ body {
     border-color: $primary 
   }
 }
+.donation-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 1rem;
+  min-height: 100vh;
+}
+
+.donation-card {
+  width: 100%;
+  max-width: 600px;
+  border-radius: 1.25rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.donation-card:hover {
+  transform: translateY(-3px);
+}
+
+.donation-header {
+  font-size: 1.75rem;
+  font-weight: 600;
+  text-align: center;
+  background-color: #4f5d75;
+  color: #fff;
+  padding: 1.25rem;
+  border-top-left-radius: 1.25rem;
+  border-top-right-radius: 1.25rem;
+}
+
+.donation-field {
+  margin-bottom: 1.5rem;
+}
+
+.donation-button {
+  width: 100%;
+  padding: 0.9rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+}

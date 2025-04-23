@@ -29,7 +29,6 @@ const Register = () => {
     //Validacion de contraseñas iguales
 
 const handleconfirmPasswords= (e) =>{
-  e.preventDefault()
   if(password!==confirmPassword){
     alert('The Password doesnt match')
     setPasswordMatch(false)
@@ -57,19 +56,19 @@ const handleconfirmPasswords= (e) =>{
                   <p className="text-body-secondary">Create your account</p>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>@</CInputGroupText>
-                    <CFormInput type="email" placeholder="Email" autoComplete="email" />
+                    <CFormInput type="email" placeholder="Email" autoComplete="email" required/>
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
-                    <CFormInput type="text" placeholder="First Name"/>
+                    <CFormInput type="text" placeholder="First Name" required/>
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
-                    <CFormInput type="text" placeholder="Last Name"/>
+                    <CFormInput type="text" placeholder="Last Name" required/>
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
@@ -88,6 +87,7 @@ const handleconfirmPasswords= (e) =>{
                       autoComplete="new-password"
                       value={password}
                       onChange={(e)=> setPassword(e.target.value)}
+                      required
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-4">
@@ -100,6 +100,7 @@ const handleconfirmPasswords= (e) =>{
                       autoComplete="new-password"
                       value={confirmPassword}
                       onChange={(e)=>setConfirmPassword(e.target.value)}
+                      required
                     />
                   </CInputGroup>
                   <div className="d-grid">

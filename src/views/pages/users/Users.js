@@ -1,12 +1,14 @@
-import React, {useState} from 'react'
-import { CCard, CCardBody, CPagination, CPaginationItem,CCardHeader, CButton, CTable, CModal, CModalHeader, CModalBody, CModalFooter,CForm, CFormInput } from '@coreui/react'
+import React, {use, useState} from 'react'
+import { CCard, CCardBody, CPagination, CPaginationItem,CCardHeader, CButton, CTable, CModal, CModalHeader, CModalBody, CModalFooter,CForm, CFormInput, CInputGroupText } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilUser } from '@coreui/icons'
+import { cilSearch, cilUser } from '@coreui/icons'
+import afueras from '../../../assets/images/portada_geriatrico.jpg'
 
 const Users = () => {
     const[visible,setVisible]=useState(false)
     const[visible2,setVisible2]=useState(false)
     const[visible3,setVisible3]=useState(false)
+    const[search,setSearch]=useState('')
     const [newUser,setNewUser]=useState({
       first_name:'',
       last_name:'',
@@ -87,7 +89,13 @@ const Users = () => {
       })
       setVisible3(false)
     }
-    
+    const searching = users.filter(users =>
+      users.first_name.toLowerCase().includes(search.toLowerCase()) ||
+      users.last_name.toLowerCase().includes(search.toLowerCase()) ||
+      users.email.toLowerCase().includes(search.toLowerCase()) ||
+      users.phone.toLowerCase().includes(search)
+    )
+
   return (
     <CCard>
     <CCardHeader className='d-flex justify-content-between align-items-center'>
@@ -96,10 +104,17 @@ const Users = () => {
           <CIcon icon={cilUser} size='lg'/> Add +</CButton>
     </CCardHeader>
     <CCardHeader>
-      <p>APARTADO DE FILTRACION</p>
+      <div className='d-flex justify-content-end'>
+        <CForm className='w-50'>
+          <CInputGroupText>
+           <CIcon icon={cilSearch} size='lg'/>
+           <CFormInput placeholder='Search User (name,email,phone)' value={search} onChange={(e) => setSearch(e.target.value)}/> 
+          </CInputGroupText>
+        </CForm>
+      </div>
     </CCardHeader>
       <CCardBody>
-        <CTable columns={columns} items={users.map(users =>(
+        <CTable columns={columns} items={searching.map(users =>(
             {...users,
             actions: (
                 <div className='d-flex gap-3'>

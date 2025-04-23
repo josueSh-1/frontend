@@ -35,7 +35,63 @@ const Login = () => {
       backgroundSize: 'cover',
       backgroundPosition: 'center',
     }}>
-       <CModal
+      <CContainer>
+        <CRow className="justify-content-center">
+          <CCol md={8}>
+            <CCardGroup>
+              <CCard className="p-4">
+                <CCardBody>
+                     <CForm >
+                     <div className='d-flex justify-content-end'>
+                       <CIcon icon={cilX} size='xl' onClick={() =>navigate('/')} className='x_nav'></CIcon>
+                     </div>
+                     <h1>Login</h1>
+                     <p className="text-body-secondary">Sign In to your account</p>
+                     <CInputGroup className="mb-3">
+                       <CInputGroupText>
+                         <CIcon icon={cilUser} />
+                       </CInputGroupText>
+                       <CFormInput type="email" placeholder="Email" autoComplete="email" required/>
+                     </CInputGroup>
+                     <CInputGroup className="mb-4">
+                       <CInputGroupText>
+                         <CIcon icon={cilLockLocked} />
+                       </CInputGroupText>
+                       <CFormInput
+                         type="password"
+                         placeholder="Password"
+                         autoComplete="current-password"
+                         required
+                       />
+                     </CInputGroup>
+                     <CRow>
+                       <CCol xs={6}>
+                         <CButton color="primary" type="submit" className="px-5">
+                           Login
+                         </CButton>
+                       </CCol>
+                       <CCol xs={6} className='text-end'>
+                         <CButton color="link" onClick={() => setVisible(true)}>
+                           Forgot password?
+                         </CButton>
+                       </CCol>
+                     </CRow>
+                     <div className='text-center mt-4'>
+                           <p className='mb-0'>Do you not have an account?</p>
+                         <Link to="/register">
+                         <CButton color="link" className="px-0">
+                         Register Now!
+                          </CButton>
+                         </Link>
+                     </div>
+                   </CForm>
+                </CCardBody>
+              </CCard>
+            </CCardGroup>
+          </CCol>
+        </CRow>
+      </CContainer>
+      <CModal
         visible={visible}
         onClose={() => setVisible(false)}
         aria-labelledby="Modal_Password">
@@ -89,61 +145,6 @@ const Login = () => {
           </CButton>
         </CModalFooter>
       </CModal>
-      <CContainer>
-        <CRow className="justify-content-center">
-          <CCol md={8}>
-            <CCardGroup>
-              <CCard className="p-4">
-                <CCardBody>
-                     <CForm>
-                     <div className='d-flex justify-content-end'>
-                       <CIcon icon={cilX} size='xl' onClick={() =>navigate('/')} className='x_nav'></CIcon>
-                     </div>
-                     <h1>Login</h1>
-                     <p className="text-body-secondary">Sign In to your account</p>
-                     <CInputGroup className="mb-3">
-                       <CInputGroupText>
-                         <CIcon icon={cilUser} />
-                       </CInputGroupText>
-                       <CFormInput type="email" placeholder="Email" autoComplete="email" />
-                     </CInputGroup>
-                     <CInputGroup className="mb-4">
-                       <CInputGroupText>
-                         <CIcon icon={cilLockLocked} />
-                       </CInputGroupText>
-                       <CFormInput
-                         type="password"
-                         placeholder="Password"
-                         autoComplete="current-password"
-                       />
-                     </CInputGroup>
-                     <CRow>
-                       <CCol xs={6}>
-                         <CButton color="primary" type="submit" className="px-5">
-                           Login
-                         </CButton>
-                       </CCol>
-                       <CCol xs={6} className='text-end'>
-                         <CButton color="link" onClick={() => setVisible(true)}>
-                           Forgot password?
-                         </CButton>
-                       </CCol>
-                     </CRow>
-                     <div className='text-center mt-4'>
-                           <p className='mb-0'>Do you not have an account?</p>
-                         <Link to="/register">
-                         <CButton color="link" className="px-0">
-                         Register Now!
-                          </CButton>
-                         </Link>
-                     </div>
-                   </CForm>
-                </CCardBody>
-              </CCard>
-            </CCardGroup>
-          </CCol>
-        </CRow>
-      </CContainer>
     </div>
   )
 }

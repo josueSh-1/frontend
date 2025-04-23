@@ -1,4 +1,4 @@
-import React, { use, useState } from 'react'
+import React, {useState } from 'react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
@@ -80,7 +80,7 @@ const Visits = () => {
           </CForm>
         </CModalBody>
         <CModalFooter>
-          <CButton color="primary" onClick={handleCreateEvent}>
+          <CButton color="primary" type='submit'onClick={handleCreateEvent}>
             Create an Event
           </CButton>
         </CModalFooter>

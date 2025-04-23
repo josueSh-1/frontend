@@ -1,5 +1,7 @@
-import { CCard, CCardBody, CCardFooter, CRow, CCardImage, CCol, CCardText, CCardTitle, CCardHeader, CModal, CModalHeader, CModalBody, CModalFooter, CForm, CFormInput,CFormTextarea, CButton, COffcanvas, COffcanvasBody, COffcanvasHeader, COffcanvasTitle, CCloseButton} from '@coreui/react'
+import { CCard, CCardBody, CCardFooter, CRow, CCardImage, CCol, CCardText, CCardTitle, CCardHeader, CModal, CModalHeader, CModalBody, CModalFooter, CForm, CFormInput,CFormTextarea, CButton, CInputGroupText} from '@coreui/react'
 import react, {useState} from 'react'
+import CIcon from '@coreui/icons-react'
+import { cilSearch } from '@coreui/icons'
 import '../../../scss/style.scss'
 
 import avatar2 from 'src/assets/images/avatars/2.jpg'
@@ -8,11 +10,13 @@ import avatar4 from 'src/assets/images/avatars/4.jpg'
 import avatar5 from 'src/assets/images/avatars/5.jpg'
 import avatar6 from 'src/assets/images/avatars/6.jpg'
 
+
 const Residents= () =>{
 
     const [visible,setVisible]=useState(false)
     const [visible2, setVisible2] = useState(false)
     const [selectResident,setSelectResident] = useState(null)
+    const [search,setSearch]=useState('')
     const [residents,setResidents]=useState([
         {   first_name: 'Juan', last_name: 'Pérez', birthdate: '1990-05-15', admission_date: '2023-01-10', bio: 'Juan es un ingeniero apasionado por la tecnología y la música.', photo: avatar6,},
         {   first_name: 'María', last_name: 'Gómez', birthdate: '1985-08-22', admission_date: '2022-06-05', bio: 'María es una artista que disfruta pintar y viajar.', photo: avatar5, },
@@ -55,9 +59,25 @@ const Residents= () =>{
         setSelectResident({...residents})
         setVisible2(true)
     }
+    const searching = residents.filter(residents=>
+        residents.first_name.toLowerCase().includes(search.toLowerCase()) ||
+        residents.last_name.toLowerCase().includes(search.toLowerCase())
+    )
+        
+    
     return(
         <div>
         <CCard>
+            <CCardHeader>
+                <div className='d-flex justify-content-end'>
+                    <CForm className='w-50'>
+                        <CInputGroupText>
+                            <CIcon icon={cilSearch} size='lg'/>
+                            <CFormInput placeholder='Search Residents Name' value={search} onChange={(e) => setSearch(e.target.value)}/> 
+                        </CInputGroupText>
+                    </CForm>
+                </div>
+            </CCardHeader>
             <CCardBody>
                 <CRow xs={{ cols: 1 }} md={{ cols: 3 }} className="g-5">
                     <CCol xs>
@@ -78,7 +98,7 @@ const Residents= () =>{
                         </CCardFooter>
                         </CCard>
                     </CCol>
-                    {residents.map((resident)=>
+                    {searching.map((resident)=>
                      <CCol xs>
                       <CCard className="h-100 card_resident" onClick={()=>handleInfoAction(resident)}> 
                          <CCardHeader><h4>{resident.first_name} {resident.last_name}</h4></CCardHeader>
@@ -148,7 +168,7 @@ const Residents= () =>{
                 </CForm>
             </CModalBody>
             <CModalFooter>
-                <CButton onClick={handleAddCreate} color='info' variant='outline'>Add +</CButton>
+                <CButton onClick={handleAddCreate} type='submit' color='info' variant='outline'>Add +</CButton>
             </CModalFooter>
         </CModal>
         <CModal visible={visible2} onClose={() => setVisible2(false)}>
