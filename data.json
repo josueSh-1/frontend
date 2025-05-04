@@ -1,0 +1,8 @@
+{
+    "users": [
+      {"id": 1,"first_name": "Mark","last_name": "Otto","email": "mark@mdo.com","phone": "555-123","birth_date": "1990-05-12","password": "mark123"},
+      {"id": 2,"first_name": "Jacob","last_name": "Thornton","email": "jacob@fat.com","phone": "555-321","birth_date": "1988-03-25","password": "jacob321"},
+      {"id": 3,"first_name": "Larry","last_name": "Gonzales","email": "larry@twitter.com","phone": "555-132","birth_date": "1992-11-10","password": "larry456"},
+      {"id": 4,"first_name": "John","last_name": "Doe","email": "john@doe.com","phone": "555-456","birth_date": "1995-07-08","password": "john789"}
+    ]
+  }

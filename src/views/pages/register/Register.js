@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {use, useState} from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import {
   CButton,
@@ -22,19 +22,69 @@ const Register = () => {
   const navigate = useNavigate();
 
     //Estados de contraseña 
-  const [password, setPassword]= useState('')
   const [confirmPassword, setConfirmPassword]= useState('')
   const [passwordMatch, setPasswordMatch]=useState(true)
+  const [newUser, setNewUser]=useState({
+    first_name: '',
+    last_name: '',
+    email:'',
+    phone:'',
+    birth_date:'',
+    password: '',
+  })
   
+
     //Validacion de contraseñas iguales
 
-const handleconfirmPasswords= (e) =>{
-  if(password!==confirmPassword){
+const handleCreateAction= async(e) =>{
+  e.preventDefault()
+
+  if(newUser.password!==confirmPassword){
     alert('The Password doesnt match')
     setPasswordMatch(false)
     return
   }else{
     setPasswordMatch(true)
+  }
+  if(passwordMatch){
+    try{
+      const response = await fetch('http://localhost:3000/users',{
+          method: 'POST',
+          headers:{
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newUser),
+        }
+      )
+      if(!response.ok){
+        alert('There was an error creating the account')
+        console.error('server error: ', response.status)
+      }
+      const data= await response.json()
+      console.log('Response data: ', data)      
+      setNewUser({
+        first_name: '',
+        last_name: '',
+        email:'',
+        phone:'',
+        birth_date:'',
+        password: '',
+      })
+      setConfirmPassword('')
+      navigate('/login')
+    }catch (error){
+      console.error('Error creating account: ', error)
+      alert('There was an error creating the account')     
+      setNewUser({
+        first_name: '',
+        last_name: '',
+        email:'',
+        phone:'',
+        birth_date:'',
+        password: '',
+      })
+      return
+    }
   }
 }
   return (
@@ -48,7 +98,7 @@ const handleconfirmPasswords= (e) =>{
           <CCol md={9} lg={7} xl={6}>
             <CCard className="mx-4">
               <CCardBody className="p-4">
-                <CForm onSubmit={handleconfirmPasswords}>
+                <CForm onSubmit={handleCreateAction}>
                   <div className='d-flex justify-content-end'>
                    <CIcon icon={cilX} size='xl' onClick={() =>navigate('/')} className='x_nav' ></CIcon>
                   </div>
@@ -56,25 +106,46 @@ const handleconfirmPasswords= (e) =>{
                   <p className="text-body-secondary">Create your account</p>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>@</CInputGroupText>
-                    <CFormInput type="email" placeholder="Email" autoComplete="email" required/>
+                    <CFormInput type="email" placeholder="Email" autoComplete="email" required
+                      value={newUser.email || ''}
+                      onChange={(e)=>setNewUser({...newUser, email:e.target.value})}
+                    />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
-                    <CFormInput type="text" placeholder="First Name" required/>
+                    <CFormInput type="text" placeholder="First Name" required
+                      value={newUser.first_name || ''}
+                      onChange={(e)=>setNewUser({...newUser, first_name:e.target.value})}
+                    />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
-                    <CFormInput type="text" placeholder="Last Name" required/>
+                    <CFormInput type="text" placeholder="Last Name" required
+                      value={newUser.last_name || ''}
+                      onChange={(e)=>setNewUser({...newUser, last_name:e.target.value})}
+                    />
+                  </CInputGroup>
+                  <CInputGroup className='mb-3'>
+                  <CInputGroupText>
+                      <CIcon icon={cilUser} />
+                  </CInputGroupText>
+                  <CFormInput type="tel" placeholder="Phone" required
+                    value={newUser.phone || ''} 
+                    onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })}
+                  />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
                       <CIcon icon={cilCalendar}/>
                     </CInputGroupText>
-                  <CFormInput type="date"/>
+                  <CFormInput type="date"
+                    value={newUser.birth_date || ''}
+                    onChange={(e)=>setNewUser({...newUser, birth_date:e.target.value})}
+                  />
                   <p className='small text-muted'>Enter your birth date</p>
                   </CInputGroup>
                   <CInputGroup className="mb-3">
@@ -85,8 +156,8 @@ const handleconfirmPasswords= (e) =>{
                       type="password"
                       placeholder="Password"
                       autoComplete="new-password"
-                      value={password}
-                      onChange={(e)=> setPassword(e.target.value)}
+                      value={newUser.password}
+                      onChange={(e)=> setNewUser({...newUser, password:e.target.value})}
                       required
                     />
                   </CInputGroup>
