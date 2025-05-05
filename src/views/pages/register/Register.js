@@ -8,6 +8,7 @@ import {
   CContainer,
   CForm,
   CFormInput,
+  CFormSelect,
   CInputGroup,
   CInputGroupText,
   CRow,
@@ -16,7 +17,7 @@ import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser, cilX, cilCalendar } from '@coreui/icons'
 import afueras from '../../../assets/images/afueras.jpg'
 import '../../../scss/style.scss'
-import classNames from 'classnames'
+import axios from 'axios'
 
 const Register = () => {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ const Register = () => {
     //Estados de contraseña 
   const [confirmPassword, setConfirmPassword]= useState('')
   const [passwordMatch, setPasswordMatch]=useState(true)
+  const [phoneCode, setPhoneCode]=useState('+58')
   const [newUser, setNewUser]=useState({
     first_name: '',
     last_name: '',
@@ -38,7 +40,6 @@ const Register = () => {
 
 const handleCreateAction= async(e) =>{
   e.preventDefault()
-
   if(newUser.password!==confirmPassword){
     alert('The Password doesnt match')
     setPasswordMatch(false)
@@ -47,21 +48,10 @@ const handleCreateAction= async(e) =>{
     setPasswordMatch(true)
   }
   if(passwordMatch){
+    const fulldata ={ ...newUser, phone: `${phoneCode} ${newUser.phone}`}
     try{
-      const response = await fetch('http://localhost:3000/users',{
-          method: 'POST',
-          headers:{
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(newUser),
-        }
-      )
-      if(!response.ok){
-        alert('There was an error creating the account')
-        console.error('server error: ', response.status)
-      }
-      const data= await response.json()
-      console.log('Response data: ', data)      
+      const response = await axios.post('http://localhost:3001/users', fulldata)
+      console.log('Response data: ', response.data)      
       setNewUser({
         first_name: '',
         last_name: '',
@@ -83,7 +73,6 @@ const handleCreateAction= async(e) =>{
         birth_date:'',
         password: '',
       })
-      return
     }
   }
 }
@@ -133,6 +122,10 @@ const handleCreateAction= async(e) =>{
                   <CInputGroupText>
                       <CIcon icon={cilUser} />
                   </CInputGroupText>
+                  <CFormSelect value={phoneCode} onChange={(e)=>setPhoneCode(e.target.value)}>
+                    <option value="+58">(+58)</option>
+                    <option value="+57">(+57)</option>
+                  </CFormSelect>
                   <CFormInput type="tel" placeholder="Phone" required
                     value={newUser.phone || ''} 
                     onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })}

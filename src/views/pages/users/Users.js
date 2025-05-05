@@ -1,8 +1,9 @@
-import React, {use, useState} from 'react'
+import React, {use, useEffect, useState} from 'react'
 import { CCard, CCardBody, CPagination, CPaginationItem,CCardHeader, CButton, CTable, CModal, CModalHeader, CModalBody, CModalFooter,CForm, CFormInput, CInputGroupText } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilSearch, cilUser } from '@coreui/icons'
 import afueras from '../../../assets/images/portada_geriatrico.jpg'
+import axios from 'axios'
 
 const Users = () => {
     const[visible,setVisible]=useState(false)
@@ -18,32 +19,9 @@ const Users = () => {
     //Seleccion de Usuario Vacia
     const[selectUser,setSelectUser]=useState(null)
     //Arreglo de Usuarios
-    const[users,setUsers]=useState([
-      { first_name: 'Mark', last_name: 'Otto', email: 'mark@mdo.com', phone: '555-123', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'} } },
-      { first_name: 'Jacob', last_name: 'Thornton', email: 'jacob@fat.com', phone: '555-321', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5' }}, },
-      { first_name: 'Larry', last_name: 'Gonzales', email: 'larry@twitter.com', phone:'555-132', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}}, },
-      { first_name: 'John', last_name: 'Doe', email: 'john@doe.com', phone: '555-456', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
-      { first_name: 'Jane', last_name: 'Smith', email: 'jane@smith.com', phone: '555-789', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
-      { first_name: 'Robert', last_name: 'Johnson', email: 'robert@johnson.com', phone: '555-987', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
-      { first_name: 'Emily', last_name: 'Williams', email: 'emily@williams.com', phone: '555-654', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
-      { first_name: 'Michael', last_name: 'Brown', email: 'michael@brown.com', phone: '555-321', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
-      { first_name: 'Sarah', last_name: 'Jones', email: 'sarah@jones.com', phone: '555-876', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
-      { first_name: 'David', last_name: 'Garcia', email: 'david@garcia.com', phone: '555-234', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
-      { first_name: 'Jessica', last_name: 'Miller', email: 'jessica@miller.com', phone: '555-567', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
-      { first_name: 'James', last_name: 'Davis', email: 'james@davis.com', phone: '555-890', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
-      { first_name: 'Lisa', last_name: 'Rodriguez', email: 'lisa@rodriguez.com', phone: '555-432', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
-      { first_name: 'Daniel', last_name: 'Martinez', email: 'daniel@martinez.com', phone: '555-765', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
-      { first_name: 'Amanda', last_name: 'Hernandez', email: 'amanda@hernandez.com', phone: '555-098', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
-      { first_name: 'Christopher', last_name: 'Lopez', email: 'chris@lopez.com', phone: '555-543', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
-      { first_name: 'Ashley', last_name: 'Wilson', email: 'ashley@wilson.com', phone: '555-876', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
-      { first_name: 'Matthew', last_name: 'Anderson', email: 'matt@anderson.com', phone: '555-210', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
-      { first_name: 'Jennifer', last_name: 'Thomas', email: 'jennifer@thomas.com', phone: '555-543', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
-      { first_name: 'Joshua', last_name: 'Taylor', email: 'josh@taylor.com', phone: '555-876', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
-      { first_name: 'Elizabeth', last_name: 'Moore', email: 'liz@moore.com', phone: '555-109', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
-      { first_name: 'Andrew', last_name: 'Jackson', email: 'andrew@jackson.com', phone: '555-432', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
-      { first_name: 'Nicole', last_name: 'White', email: 'nicole@white.com', phone: '555-765', _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'}} },
-  ])
-
+    const[users,setUsers]=useState([])
+    //Carga de usuarios una vez
+    useEffect(()=>{ axios.get('http://localhost:3001/users').then(res=>setUsers(res.data)).catch(err=>console.error("Error: ",err))},[])
     const columns = [
         {  key: 'first_name', label: 'First Name',_props: { scope: 'col', className:'fs-4' }, },
         {  key: 'last_name', label: 'Last Name', _props: { scope: 'col', className:'fs-4'  },},
@@ -69,31 +47,59 @@ const Users = () => {
       })
       setVisible3(true)
     }
-    const handleDeleteAction=()=>{
-        setUsers(users.filter((users) => users.email !== selectUser.email))
+    const handleDeleteAction= async()=>{
+      try{
+        await axios.delete(`http://localhost:3001/users/${selectUser.id}`)
+        setUsers(users.filter((users) => users.id !== selectUser.id))
         setVisible(false)
         setSelectUser(null)
+      }catch(error){
+        console.error('Error deleting: ', error)
+      }
     }
-    const handleEditAction=()=>{
-        setUsers(users.map((users)=> users.email === selectUser.email ? {...selectUser, _cellProps: users._cellProps}:users))
+    const handleEditAction= async()=>{
+      try{
+        const response = await axios.put(`http://localhost:3001/users/${selectUser.id}`, selectUser)
+        setUsers(users.map((users)=> users.id === selectUser.id ? response.data: users))
         setVisible2(false)
         setSelectUser(null)
+      }catch(error){
+        console.error("Error Editing: ",error)
+      } 
     }
-    const handleCreateAction=()=>{
-      setUsers([...users, { ...newUser, _cellProps: { first_name: {className: 'fs-5'}, last_name: {className: 'fs-5'} } }])
-      setNewUser({
-        first_name:'',
-        last_name:'',
-        email:'',
-        phone:''
-      })
+    const handleCreateAction= async()=>{
+      try{
+        const response = await axios.post('http://localhost:3001/users', newUser)
+        console.log('Response data: ', response.data)      
+        setUsers([...users, response.data])
+        setNewUser({
+          first_name: '',
+          last_name: '',
+          email:'',
+          phone:'',
+          birth_date:'',
+          password: '',
+        })
+      }catch (error){
+        console.error('Error creating account: ', error)
+        alert('There was an error creating the account')     
+        setNewUser({
+          first_name: '',
+          last_name: '',
+          email:'',
+          phone:'',
+          birth_date:'',
+          password: '',
+        })
+      }
       setVisible3(false)
     }
+
     const searching = users.filter(users =>
-      users.first_name.toLowerCase().includes(search.toLowerCase()) ||
-      users.last_name.toLowerCase().includes(search.toLowerCase()) ||
-      users.email.toLowerCase().includes(search.toLowerCase()) ||
-      users.phone.toLowerCase().includes(search)
+      users.first_name?.toLowerCase().includes(search.toLowerCase()) ||
+      users.last_name?.toLowerCase().includes(search.toLowerCase()) ||
+      users.email?.toLowerCase().includes(search.toLowerCase()) ||
+      users.phone?.toLowerCase().includes(search)
     )
 
   return (
