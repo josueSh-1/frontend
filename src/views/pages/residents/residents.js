@@ -1,29 +1,20 @@
 import { CCard, CCardBody, CCardFooter, CRow, CCardImage, CCol, CCardText, CCardTitle, CCardHeader, CModal, CModalHeader, CModalBody, CModalFooter, CForm, CFormInput,CFormTextarea, CButton, CInputGroupText} from '@coreui/react'
-import react, {useState} from 'react'
+import react, {useEffect, useState} from 'react'
 import CIcon from '@coreui/icons-react'
 import { cilSearch } from '@coreui/icons'
 import '../../../scss/style.scss'
-
-import avatar2 from 'src/assets/images/avatars/2.jpg'
-import avatar3 from 'src/assets/images/avatars/3.jpg'
-import avatar4 from 'src/assets/images/avatars/4.jpg'
-import avatar5 from 'src/assets/images/avatars/5.jpg'
-import avatar6 from 'src/assets/images/avatars/6.jpg'
+import axios from "axios"
 
 
 const Residents= () =>{
-
+    
     const [visible,setVisible]=useState(false)
     const [visible2, setVisible2] = useState(false)
     const [selectResident,setSelectResident] = useState(null)
     const [search,setSearch]=useState('')
-    const [residents,setResidents]=useState([
-        {   first_name: 'Juan', last_name: 'Pérez', birthdate: '1990-05-15', admission_date: '2023-01-10', bio: 'Juan es un ingeniero apasionado por la tecnología y la música.', photo: avatar6,},
-        {   first_name: 'María', last_name: 'Gómez', birthdate: '1985-08-22', admission_date: '2022-06-05', bio: 'María es una artista que disfruta pintar y viajar.', photo: avatar5, },
-        {  first_name: 'Carlos', last_name: 'Rodríguez', birthdate: '1995-03-30', admission_date: '2024-02-20', bio: 'Carlos es un estudiante de medicina con interés en la investigación.', photo: avatar3, },
-        {   first_name: 'Ana', last_name: 'Martínez', birthdate: '1988-11-12', admission_date: '2023-09-15', bio: 'Ana es una escritora que publica novelas de ficción.', photo: avatar4, },
-        {  first_name: 'Luis', last_name: 'Sánchez', birthdate: '1992-07-25', admission_date: '2024-01-30', bio: 'Luis es un chef especializado en cocina internacional.', photo: avatar2, },
-    ])
+    const [residents,setResidents]=useState([])
+    useEffect(()=>{axios.get('http://localhost:3001/residents').then(response=>setResidents(response.data)).catch(error=>console.error('Error carga: ',error))}, 
+    [])
     const [newResident, setNewResident]=useState({
         first_name: '',
         last_name: '',
@@ -41,17 +32,20 @@ const Residents= () =>{
         }
     }
 
-    const handleAddCreate=()=>{
-        const newID= Math.max(...residents.map(r=>r.id),0)+1
-        setResidents([...residents, {...newResident, id: newID}])
-        setResidents([...residents, newResident])
-        setNewResident({
-            first_name: '',
-            last_name: '',
-            birthdate: '',
-            admission_date: '',
-            bio: '',
-            photo: '',})
+    const handleAddCreate= async()=>{
+        try{
+            const response = await axios.post('http://localhost:3001/residents', newResident)
+            setResidents([...residents, response.data])
+            setNewResident({
+                first_name: '',
+                last_name: '',
+                birthdate: '',
+                admission_date: '',
+                bio: '',
+                photo: '',})
+        }catch(error){
+            console.error('Error creating resident: ', error)
+        }
         setVisible(false)
     }
 
@@ -115,82 +109,136 @@ const Residents= () =>{
                     )}
                 </CRow>
             </CCardBody>
-        </CCard>
-        <CModal visible={visible} onClose={()=>setVisible(false)} className='mt-5'>
-            <CModalHeader>
-                <h3>Adding a Resident</h3>
+            </CCard>
+            <CModal 
+                visible={visible} 
+                onClose={() => setVisible(false)}
+                alignment="center"
+                backdrop="static"
+            >
+            <CModalHeader className="bg-primary text-white">
+                <h5 className="modal-title">Adding a Resident</h5>
+                <CButton color="white" variant="ghost" size="sm" onClick={() => setVisible(false)}>
+                    &times;
+                </CButton>
             </CModalHeader>
             <CModalBody>
-                <CForm>
-                 <CFormInput
-                    label="First Name Resident"
+            <CForm onSubmit={handleAddCreate} className="px-3 py-2">
+                <CFormInput
+                    label="First Name"
                     type="text"
-                    placeholder="first name"
+                    placeholder="Enter first name"
                     value={newResident.first_name}
                     onChange={(e) => setNewResident({...newResident, first_name: e.target.value})}
-                    className='mb-4'
+                    className="mb-3"
                 />
                 <CFormInput
-                    label="Last Name Resident"
+                    label="Last Name"
                     type="text"
+                    placeholder="Enter last name"
                     value={newResident.last_name}
                     onChange={(e) => setNewResident({...newResident, last_name: e.target.value})}
-                    className='mb-4'            
+                    className="mb-3"
                 />
                 <CFormInput
-                    label="Birthdate Resident"
+                    label="Birthdate"
                     type="date"
                     value={newResident.birthdate}
                     onChange={(e) => setNewResident({...newResident, birthdate: e.target.value})}
-                    className='mb-4'            
+                    className="mb-3"
                 />
                 <CFormInput
-                    label="Resident's income"
+                    label="Admission Date"
                     type="date"
                     value={newResident.admission_date}
                     onChange={(e) => setNewResident({...newResident, admission_date: e.target.value})}
-                    className='mb-4'            
+                    className="mb-3"
                 />
                 <CFormTextarea
-                    label="Biografy of the Resident"
-                    type="text"
+                    label="Biography"
+                    placeholder="Enter resident's biography"
                     value={newResident.bio}
                     onChange={(e) => setNewResident({...newResident, bio: e.target.value})}
                     rows={4}
-                    className='mb-4'
+                    className="mb-3"
                 />
-                <CFormInput
-                    label="Photo of the Resident"
-                    type="file"
-                    onChange={handleImage}
-                    className='mb-4'            
-                />
-                </CForm>
-            </CModalBody>
-            <CModalFooter>
-                <CButton onClick={handleAddCreate} type='submit' color='info' variant='outline'>Add +</CButton>
-            </CModalFooter>
-        </CModal>
-        <CModal visible={visible2} onClose={() => setVisible2(false)}>
-             <CModalHeader>
-                 <h4>Resident Info</h4>
-             </CModalHeader>
-            <CModalBody>
-                 {selectResident && (
-                <div style={{ textAlign: 'center' }}>
-                    <img
-                    src={selectResident.photo}
-                    alt={`${selectResident.first_name} ${selectResident.last_name}`}
-                    style={{ borderRadius: '50%', width: '150px', height: '150px', objectFit: 'cover', marginBottom: '1rem' }}
+                <div className="mb-3">
+                    <label className="form-label">Photo</label>
+                    <CFormInput
+                        type="file"
+                        onChange={handleImage}
                     />
-                    <h5>{selectResident.first_name} {selectResident.last_name}</h5>
-                    <p><strong>Birthdate:</strong> {selectResident.birthdate}</p>
-                    <p><strong>Admission:</strong> {selectResident.admission_date}</p>
-                    <p><strong>Bio:</strong> {selectResident.bio}</p>
                 </div>
-                )}
+            </CForm>
             </CModalBody>
-        </CModal>
+            <CModalFooter className="border-top-0">
+                <CButton color="secondary" onClick={() => setVisible(false)}>
+                    Cancel
+                </CButton>
+                <CButton 
+                    color="primary" 
+                    type="submit" 
+                    onClick={handleAddCreate}
+                >
+                    Add Resident
+                </CButton>
+            </CModalFooter>
+            </CModal>
+            <CModal 
+                visible={visible2} 
+                onClose={() => setVisible2(false)}
+                alignment="center"
+            >
+            <CModalHeader className="bg-primary text-white">
+                <h5 className="modal-title">Resident Information</h5>
+                <CButton color="white" variant="ghost" size="sm" onClick={() => setVisible2(false)}>
+                    &times;
+                </CButton>
+            </CModalHeader>
+            <CModalBody>
+                {selectResident && (
+                    <div className="text-center px-4 py-3">
+                        <div className="mb-4">
+                            <img
+                                src={selectResident.photo}
+                                alt={`${selectResident.first_name} ${selectResident.last_name}`}
+                                className="rounded-circle border border-3 border-primary"
+                                style={{ 
+                                width: '180px', 
+                                height: '180px', 
+                                objectFit: 'cover',
+                                boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
+                                }}
+                            />
+                        </div>
+                         <h4 className="mb-3">
+                        {selectResident.first_name} {selectResident.last_name}
+                        </h4>
+                    <div className="text-start mx-auto" style={{ maxWidth: '400px' }}>
+                    <div className="d-flex justify-content-between border-bottom py-2">
+                        <span className="fw-bold">Birthdate:</span>
+                        <p>{selectResident.birthdate}</p>
+                    </div>
+                    <div className="d-flex justify-content-between border-bottom py-2">
+                        <span className="fw-bold">Admission Date:</span>
+                        <p>{selectResident.admission_date}</p>
+                    </div>
+                    <div className="mt-3">
+                        <h6 className="fw-bold">Biography:</h6>
+                        <p className="text-muted">
+                        {selectResident.bio}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            )}
+            </CModalBody>
+            <CModalFooter className="border-top-0 justify-content-center">
+            <CButton color="secondary" onClick={() => setVisible2(false)}>
+                Close
+                </CButton>
+            </CModalFooter>
+            </CModal>
         </div>
     )
 }

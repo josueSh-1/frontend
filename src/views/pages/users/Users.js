@@ -1,5 +1,5 @@
 import React, {use, useEffect, useState} from 'react'
-import { CCard, CCardBody, CPagination, CPaginationItem,CCardHeader, CButton, CTable, CModal, CModalHeader, CModalBody, CModalFooter,CForm, CFormInput, CInputGroupText } from '@coreui/react'
+import { CCard, CCardBody, CPagination, CPaginationItem,CCardHeader, CButton, CTable, CModal, CModalHeader, CModalBody, CModalFooter,CForm, CFormInput, CInputGroupText, CFormSelect, CInputGroup, CFormLabel } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilSearch, cilUser } from '@coreui/icons'
 import afueras from '../../../assets/images/portada_geriatrico.jpg'
@@ -9,19 +9,22 @@ const Users = () => {
     const[visible,setVisible]=useState(false)
     const[visible2,setVisible2]=useState(false)
     const[visible3,setVisible3]=useState(false)
+    const[phoneCode, setPhoneCode]=useState('')
     const[search,setSearch]=useState('')
     const [newUser,setNewUser]=useState({
       first_name:'',
       last_name:'',
       email:'',
       phone:'',
+      birth_date:'',
+      password:''
     })
     //Seleccion de Usuario Vacia
     const[selectUser,setSelectUser]=useState(null)
     //Arreglo de Usuarios
     const[users,setUsers]=useState([])
     //Carga de usuarios una vez
-    useEffect(()=>{ axios.get('http://localhost:3001/users').then(res=>setUsers(res.data)).catch(err=>console.error("Error: ",err))},[])
+    useEffect(()=>{ axios.get('http://localhost:3001/users').then(response=>setUsers(response.data)).catch(error=>console.error("Error: ",error))},[])
     const columns = [
         {  key: 'first_name', label: 'First Name',_props: { scope: 'col', className:'fs-4' }, },
         {  key: 'last_name', label: 'Last Name', _props: { scope: 'col', className:'fs-4'  },},
@@ -155,70 +158,117 @@ const Users = () => {
         </CModalFooter>
         </CModalBody>
       </CModal>
-      <CModal visible={visible2} onClose={()=> setVisible2(false)}>
-        <CModalHeader>Editing the User: {selectUser?.first_name}</CModalHeader>
-        <CModalBody>
-        {selectUser && (
-        <CForm>
-        <CFormInput
-          label="First Name"
-          value={selectUser.first_name}
-          onChange={(e) => setSelectUser({ ...selectUser, first_name: e.target.value })}
-          className="mb-3"
-        />
-        <CFormInput
-          label="Last Name"
-          value={selectUser.last_name}
-          onChange={(e) => setSelectUser({ ...selectUser, last_name: e.target.value })}
-          className="mb-3"
-        />
-        <CFormInput
-          label="Email"
-          value={selectUser.email}
-          onChange={(e) => setSelectUser({ ...selectUser, email: e.target.value })}
-          className="mb-3"
-        />
-        </CForm>
-        )}
-        </CModalBody>
-        <CModalFooter>
-            <CButton color='primary' onClick={handleEditAction}>Update</CButton>
-        </CModalFooter>
-      </CModal>
-      <CModal visible={visible3} onClose={()=>setVisible3(false)} className='mt-5'>
-        <CModalHeader>
-          <h3>Creating a User</h3>
-        </CModalHeader>
-        <CModalBody>
-          <CForm>
-            <CFormInput 
+      <CModal 
+        visible={visible2} 
+        onClose={() => setVisible2(false)}
+        alignment="center"
+        backdrop="static"
+      >
+      <CModalHeader className="bg-primary text-white">
+        <h5 className="modal-title">Editing User: {selectUser?.first_name}</h5>
+        <CButton color="white" variant="ghost" size="sm" onClick={() => setVisible2(false)}>
+          &times;
+        </CButton>
+      </CModalHeader>
+      <CModalBody>
+      {selectUser && (
+        <CForm className="px-3 py-2">
+          <CFormInput
             label="First Name"
-            value={newUser.first_name}
-            onChange={(e)=>setNewUser({...newUser, first_name: e.target.value})}
+            value={selectUser.first_name}
+            onChange={(e) => setSelectUser({ ...selectUser, first_name: e.target.value })}
             className="mb-3"
-            />
-            <CFormInput 
+          />
+          <CFormInput
             label="Last Name"
+            value={selectUser.last_name}
+            onChange={(e) => setSelectUser({ ...selectUser, last_name: e.target.value })}
+            className="mb-3"
+          />
+          <CFormInput
+            type="email"
+            label="Email Address"
+            value={selectUser.email}
+            onChange={(e) => setSelectUser({ ...selectUser, email: e.target.value })}
+            className="mb-3"
+          />
+        </CForm>
+      )}
+      </CModalBody>
+      <CModalFooter className="border-top-0">
+        <CButton color="secondary" onClick={() => setVisible2(false)}>
+          Cancel
+        </CButton>
+        <CButton color="primary" onClick={handleEditAction}>
+        Save Changes
+        </CButton>
+      </CModalFooter>
+      </CModal>
+      <CModal 
+        visible={visible3} 
+        onClose={() => setVisible3(false)}
+        alignment="center"
+        backdrop="static"
+      >
+      <CModalHeader className="bg-primary text-white">
+        <h5 className="modal-title">Create New User</h5>
+        <CButton color="white" variant="ghost" size="sm" onClick={() => setVisible3(false)}>
+          &times;
+        </CButton>
+      </CModalHeader>
+      <CModalBody>
+        <CForm className="px-3 py-2">
+          <CFormInput 
+            label="First Name"
+            placeholder="Enter first name"
+            value={newUser.first_name}
+            onChange={(e) => setNewUser({...newUser, first_name: e.target.value})}
+            className="mb-3"
+          />
+          <CFormInput 
+            label="Last Name"
+            placeholder="Enter last name"
             value={newUser.last_name}
-            onChange={(e)=>setNewUser({...newUser, last_name: e.target.value})}
+            onChange={(e) => setNewUser({...newUser, last_name: e.target.value})}
             className="mb-3"
-            />
-            <CFormInput
-            label="Email"
+          />
+          <CFormInput
+            type="email"
+            label="Email Address"
+            placeholder="Enter email"
             value={newUser.email}
-            onChange={(e)=>setNewUser({...newUser, email: e.target.value})}
+            onChange={(e) => setNewUser({...newUser, email: e.target.value})}
             className="mb-3"
-            />
+          />
+          <div className="mb-3">
+            <CFormLabel>Phone number</CFormLabel>
+            <CInputGroup>
+            <CFormSelect 
+              value={phoneCode} 
+              onChange={(e) => setPhoneCode(e.target.value)}
+              style={{maxWidth: '100px'}}
+            >
+              <option value="+58">+58 (VE)</option>
+              <option value="+57">+57 (CO)</option>
+            </CFormSelect>
             <CFormInput
-            label="Phone"
-            value={newUser.phone}
-            onChange={(e)=>setNewUser({...newUser, phone: e.target.value})}
-            className="mb-3"
+              placeholder="Enter phone number"
+              value={newUser.phone}
+              onChange={(e) => setNewUser({...newUser, phone: e.target.value})}
+              feedbackInvalid="Please provide a valid phone number."
+              valid={newUser.phone.length > 5}
             />
-          </CForm>
+            </CInputGroup>
+          </div>
+        </CForm>
         </CModalBody>
-        <CModalFooter>
-          <CButton onClick={handleCreateAction}>Create</CButton>
+        <CModalFooter className="border-top-0">
+          <CButton color="secondary" onClick={() => setVisible3(false)}>
+            Cancel
+          </CButton>
+          <CButton color="primary" onClick={handleCreateAction}>
+            Create User
+          </CButton>
         </CModalFooter>
       </CModal>
     </CCard>

@@ -36,7 +36,7 @@ const Register = () => {
   })
   
 
-    //Validacion de contraseñas iguales
+  //Validacion de contraseñas iguales
 
 const handleCreateAction= async(e) =>{
   e.preventDefault()
