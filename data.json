@@ -1,31 +1,37 @@
 {
   "users": [
     {
-      "id": "e83d",
+      "id": "d040",
       "first_name": "Marcos",
-      "last_name": "Sandal",
+      "last_name": "Sandoval",
       "email": "Piiztia@gmail.com",
-      "phone": "0412426"
-    }
-  ],
-  "residents": [
-    {
-      "id": "ba44",
-      "first_name": "",
-      "last_name": "",
-      "birthdate": "",
-      "admission_date": "",
-      "bio": "",
-      "photo": ""
+      "phone": "+58 0412426"
     },
     {
-      "id": "eac6",
-      "first_name": "Marquitos",
-      "last_name": "Pereira",
-      "birthdate": "1977-06-08",
-      "admission_date": "2022-11-03",
-      "bio": "Panadero en la era de marcos perez gimenez",
-      "photo": "blob:http://localhost:3000/6da4ab86-c89c-4148-97fd-3389898feb1e"
+      "id": "86eb",
+      "first_name": "Josue",
+      "last_name": "Sandoval",
+      "email": "josueshereira@gmail.com",
+      "phone": "+58 "
+    }
+  ],
+  "residents": [],
+  "events": [
+    {
+      "id": "3ae3",
+      "title": "hola mundo",
+      "date": "2025-05-06",
+      "description": "hola mundo",
+      "start_time": "00:35",
+      "end_time": "15:35"
+    },
+    {
+      "id": "8ab9",
+      "title": "hola chao",
+      "date": "2025-05-13",
+      "description": "hola chao",
+      "start_time": "05:15",
+      "end_time": "19:15"
     }
   ]
 }

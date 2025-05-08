@@ -123,8 +123,8 @@ const handleCreateAction= async(e) =>{
                       <CIcon icon={cilUser} />
                   </CInputGroupText>
                   <CFormSelect value={phoneCode} onChange={(e)=>setPhoneCode(e.target.value)}>
-                    <option value="+58">(+58)</option>
-                    <option value="+57">(+57)</option>
+                    <option value="+58">+58 (VE)</option>
+                    <option value="+57">+57 (CO)</option>
                   </CFormSelect>
                   <CFormInput type="tel" placeholder="Phone" required
                     value={newUser.phone || ''} 

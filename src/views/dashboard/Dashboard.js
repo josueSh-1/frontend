@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
 
 import {
@@ -42,6 +42,7 @@ import {
   cilUser,
   cilUserFemale,
 } from '@coreui/icons'
+import axios from 'axios'
 
 import avatar1 from 'src/assets/images/avatars/1.jpg'
 import avatar2 from 'src/assets/images/avatars/2.jpg'
@@ -52,8 +53,13 @@ import avatar6 from 'src/assets/images/avatars/6.jpg'
 
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 import MainChart from './MainChart'
+import UserChart from './userChart'
 
 const Dashboard = () => {
+  const [users, setUsers]=useState([])
+
+  useEffect(()=>{axios.get('http://localhost:3001/users').then(response=>setUsers(response.data)).catch(err=>console.error("Error: ",err ))},[])
+  
   const progressExample = [
     { title: 'Visits', value: '29.703 Users', percent: 40, color: 'success' },
     { title: 'Unique', value: '24.093 Users', percent: 20, color: 'info' },
@@ -197,6 +203,8 @@ const Dashboard = () => {
               </CButtonGroup>
             </CCol>
           </CRow>
+          <h5 className="mt-3">Usuarios Totales</h5>
+          <UserChart userCount={users.length} />
           <MainChart />
         </CCardBody>
         <CCardFooter>

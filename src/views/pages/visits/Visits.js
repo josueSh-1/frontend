@@ -1,8 +1,8 @@
-import React, {useState } from 'react'
+import React, {useEffect, useState } from 'react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
-
+import axios from 'axios'
 import { CModal, CModalHeader, CModalBody, CModalFooter, CButton, CForm, CFormInput, CFormTextarea, CPopover  } from '@coreui/react'
 
 
@@ -17,17 +17,18 @@ const Visits = () => {
     end_time:''
   })
   const [events, setEvents] = useState([ ])
+  // Hook para cargar eventos desde la API al montar el componente
+  useEffect(()=>{axios.get('http://localhost:3001/events').then(response=>setEvents(response.data)).catch(error=>console.error("Error ",error))},[])
   const handleDateClick = (arg) => {
+    //Guardado de fecha seleccionada
     setNewEvent({...newEvent, date: arg.dateStr})
     setVisible(true); 
   }
-  const handleCreateEvent = () => {
-    const event={
-      title: newEvent.title,
-      date: newEvent.date,
-      start_time: newEvent.start_time,
-      end_time: newEvent.end_time,
-      description: newEvent.description,
+  const handleCreateEvent = async() => {
+    try{
+      const response = await axios.post('http://localhost:3001/events',newEvent)
+    }catch(error){
+      console.error("Error Creating event: ", error)
     }
     setEvents([...events, newEvent])
     setNewEvent({title:'', date:'', description:'', start_time:'', end_time:''})
@@ -89,6 +90,7 @@ const Visits = () => {
   );
 };
 
+// Función para renderizar el contenido de los eventos
 function renderEventContent(eventInfo) {
   const startTime = eventInfo.event.extendedProps.start_time
   const endTime = eventInfo.event.extendedProps.end_time

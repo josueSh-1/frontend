@@ -1,7 +1,7 @@
-import { CCard, CCardBody, CCardFooter, CRow, CCardImage, CCol, CCardText, CCardTitle, CCardHeader, CModal, CModalHeader, CModalBody, CModalFooter, CForm, CFormInput,CFormTextarea, CButton, CInputGroupText} from '@coreui/react'
 import react, {useEffect, useState} from 'react'
 import CIcon from '@coreui/icons-react'
 import { cilSearch } from '@coreui/icons'
+import { CCard, CCardBody, CCardFooter, CRow, CCardImage, CCol, CCardText, CCardTitle, CCardHeader, CModal, CModalHeader, CModalBody, CModalFooter, CForm, CFormInput,CFormTextarea, CButton, CInputGroupText} from '@coreui/react'
 import '../../../scss/style.scss'
 import axios from "axios"
 
@@ -48,7 +48,16 @@ const Residents= () =>{
         }
         setVisible(false)
     }
-
+    const handleDeleteAction= async()=>{
+        try{
+            const response = await axios.delete(`http://localhost:3001/residents/${selectResident.id}`)
+            setResidents(residents.filter((resident)=>resident.id!==selectResident.id))
+            setSelectResident(null)
+        }catch(error){
+            console.error('Error deleting: ', error)
+        }
+        setVisible2(false)
+    }
     const handleInfoAction=(residents)=>{
         setSelectResident({...residents})
         setVisible2(true)
@@ -118,9 +127,6 @@ const Residents= () =>{
             >
             <CModalHeader className="bg-primary text-white">
                 <h5 className="modal-title">Adding a Resident</h5>
-                <CButton color="white" variant="ghost" size="sm" onClick={() => setVisible(false)}>
-                    &times;
-                </CButton>
             </CModalHeader>
             <CModalBody>
             <CForm onSubmit={handleAddCreate} className="px-3 py-2">
@@ -191,9 +197,6 @@ const Residents= () =>{
             >
             <CModalHeader className="bg-primary text-white">
                 <h5 className="modal-title">Resident Information</h5>
-                <CButton color="white" variant="ghost" size="sm" onClick={() => setVisible2(false)}>
-                    &times;
-                </CButton>
             </CModalHeader>
             <CModalBody>
                 {selectResident && (
@@ -234,9 +237,8 @@ const Residents= () =>{
             )}
             </CModalBody>
             <CModalFooter className="border-top-0 justify-content-center">
-            <CButton color="secondary" onClick={() => setVisible2(false)}>
-                Close
-                </CButton>
+            <CButton color="danger" onClick={() => handleDeleteAction(residents)}> Delete </CButton>
+            <CButton color="secondary" onClick={() => setVisible2(false)}> Close </CButton>
             </CModalFooter>
             </CModal>
         </div>

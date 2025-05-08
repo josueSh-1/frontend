@@ -1,15 +1,14 @@
-import React, {use, useEffect, useState} from 'react'
-import { CCard, CCardBody, CPagination, CPaginationItem,CCardHeader, CButton, CTable, CModal, CModalHeader, CModalBody, CModalFooter,CForm, CFormInput, CInputGroupText, CFormSelect, CInputGroup, CFormLabel } from '@coreui/react'
+import React, {useEffect, useState} from 'react'
 import CIcon from '@coreui/icons-react'
 import { cilSearch, cilUser } from '@coreui/icons'
-import afueras from '../../../assets/images/portada_geriatrico.jpg'
+import { CCard, CCardBody, CPagination, CPaginationItem,CCardHeader, CButton, CTable, CModal, CModalHeader, CModalBody, CModalFooter,CForm, CFormInput, CInputGroupText, CFormSelect, CInputGroup, CFormLabel } from '@coreui/react'
 import axios from 'axios'
 
 const Users = () => {
     const[visible,setVisible]=useState(false)
     const[visible2,setVisible2]=useState(false)
     const[visible3,setVisible3]=useState(false)
-    const[phoneCode, setPhoneCode]=useState('')
+    const[phoneCode, setPhoneCode]=useState('+58')
     const[search,setSearch]=useState('')
     const [newUser,setNewUser]=useState({
       first_name:'',
@@ -32,7 +31,8 @@ const Users = () => {
         {  key: 'phone', label: 'Cellphone', _props: { scope: 'col', className:'fs-4' }, },
         {  key: 'actions', label: '', _props: {scope: 'col', className:'fs-4' }, },
       ]
-    //Manejo de seleccion y visibilidad
+  
+      
     const handleEditClick=(users)=>{
         setSelectUser({...users})
         setVisible2(true)
@@ -71,8 +71,10 @@ const Users = () => {
       } 
     }
     const handleCreateAction= async()=>{
+      const fulldata = {...newUser, phone: `${phoneCode} ${newUser.phone}`}
       try{
-        const response = await axios.post('http://localhost:3001/users', newUser)
+        console.log('Phone: ', fulldata)
+        const response = await axios.post('http://localhost:3001/users', fulldata)
         console.log('Response data: ', response.data)      
         setUsers([...users, response.data])
         setNewUser({
@@ -147,11 +149,13 @@ const Users = () => {
         </CPaginationItem>
       </CPagination>
       </div>
-      <CModal visible={visible} onClose={()=> setVisible(false)}>
-        <CModalHeader>You want delete this User?</CModalHeader>
+      <CModal visible={visible} onClose={()=> setVisible(false)} backdrop="static">
+        <CModalHeader className="bg-primary text-white">
+          <h5 className="modal-title">You want delete this User?</h5>
+          </CModalHeader>
         <CModalBody>
         {selectUser &&(
-            <p>{selectUser.first_name}/{selectUser.last_name}/{selectUser.email}/{selectUser.phone}</p>
+            <strong>{selectUser.first_name} | {selectUser.last_name} | {selectUser.email} | {selectUser.phone}</strong>
         )} 
         <CModalFooter>
             <CButton color='danger' onClick={handleDeleteAction}>Delete</CButton>
@@ -166,9 +170,6 @@ const Users = () => {
       >
       <CModalHeader className="bg-primary text-white">
         <h5 className="modal-title">Editing User: {selectUser?.first_name}</h5>
-        <CButton color="white" variant="ghost" size="sm" onClick={() => setVisible2(false)}>
-          &times;
-        </CButton>
       </CModalHeader>
       <CModalBody>
       {selectUser && (
@@ -212,9 +213,6 @@ const Users = () => {
       >
       <CModalHeader className="bg-primary text-white">
         <h5 className="modal-title">Create New User</h5>
-        <CButton color="white" variant="ghost" size="sm" onClick={() => setVisible3(false)}>
-          &times;
-        </CButton>
       </CModalHeader>
       <CModalBody>
         <CForm className="px-3 py-2">
