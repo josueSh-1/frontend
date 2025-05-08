@@ -31,7 +31,10 @@ const Residents= () =>{
             setNewResident({...newResident, photo: imageURL})
         }
     }
-
+    const handleInfoAction=(residents)=>{
+        setSelectResident({...residents})
+        setVisible2(true)
+    }
     const handleAddCreate= async()=>{
         try{
             const response = await axios.post('http://localhost:3001/residents', newResident)
@@ -57,10 +60,6 @@ const Residents= () =>{
             console.error('Error deleting: ', error)
         }
         setVisible2(false)
-    }
-    const handleInfoAction=(residents)=>{
-        setSelectResident({...residents})
-        setVisible2(true)
     }
     const searching = residents.filter(residents=>
         residents.first_name.toLowerCase().includes(search.toLowerCase()) ||

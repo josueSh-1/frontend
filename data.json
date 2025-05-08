@@ -1,18 +1,29 @@
 {
   "users": [
     {
-      "id": "d040",
-      "first_name": "Marcos",
-      "last_name": "Sandoval",
-      "email": "Piiztia@gmail.com",
-      "phone": "+58 0412426"
+      "id": "426a",
+      "first_name": "Paleto",
+      "last_name": "Rodrigues",
+      "email": "parangaro@gmail.com",
+      "phone": "+58 555-1234",
+      "birth_date": "2002-02-20",
+      "password": "1234"
     },
     {
-      "id": "86eb",
+      "id": "cdc6",
       "first_name": "Josue",
       "last_name": "Sandoval",
       "email": "josueshereira@gmail.com",
-      "phone": "+58 "
+      "phone": "+58 4147283596",
+      "birth_date": "2004-04-13",
+      "password": "0414"
+    },
+    {
+      "id": "2db7",
+      "first_name": "luis",
+      "last_name": "contreras",
+      "email": "luisdavidcon14@gmail.com",
+      "phone": "+58 8949156"
     }
   ],
   "residents": [],
@@ -32,6 +43,30 @@
       "description": "hola chao",
       "start_time": "05:15",
       "end_time": "19:15"
+    },
+    {
+      "id": "7451",
+      "title": "",
+      "date": "2025-05-07",
+      "description": "",
+      "start_time": "",
+      "end_time": ""
+    },
+    {
+      "id": "910f",
+      "title": "Hola",
+      "date": "2025-05-14",
+      "description": "",
+      "start_time": "",
+      "end_time": ""
+    },
+    {
+      "id": "1e3f",
+      "title": "Cena",
+      "date": "2025-05-08",
+      "description": "Cena en grupo",
+      "start_time": "18:25",
+      "end_time": "18:25"
     }
   ]
 }

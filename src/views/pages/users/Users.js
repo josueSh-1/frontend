@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 import CIcon from '@coreui/icons-react'
 import { cilSearch, cilUser } from '@coreui/icons'
-import { CCard, CCardBody, CPagination, CPaginationItem,CCardHeader, CButton, CTable, CModal, CModalHeader, CModalBody, CModalFooter,CForm, CFormInput, CInputGroupText, CFormSelect, CInputGroup, CFormLabel } from '@coreui/react'
+import { CCard, CCardBody, CPagination, CPaginationItem, CButton, CTable, CModal, CModalHeader, CModalBody, CModalFooter,CForm, CFormInput, CInputGroupText, CFormSelect, CInputGroup, CFormLabel } from '@coreui/react'
 import axios from 'axios'
 
 const Users = () => {
@@ -41,7 +41,7 @@ const Users = () => {
         setSelectUser({...users})
         setVisible(true)
     }
-    const handleCreateClick=()=>{
+    const handleCreatClick=()=>{
       setNewUser({
         first_name:'',
         last_name:'',
@@ -62,7 +62,7 @@ const Users = () => {
     }
     const handleEditAction= async()=>{
       try{
-        const response = await axios.put(`http://localhost:3001/users/${selectUser.id}`, selectUser)
+        const response = await axios.put(`http://localhost:3001/user/${selectUser.id}`, selectUser)
         setUsers(users.map((users)=> users.id === selectUser.id ? response.data: users))
         setVisible2(false)
         setSelectUser(null)
@@ -86,8 +86,7 @@ const Users = () => {
           password: '',
         })
       }catch (error){
-        console.error('Error creating account: ', error)
-        alert('There was an error creating the account')     
+        console.error('Error creating account: ', error)   
         setNewUser({
           first_name: '',
           last_name: '',

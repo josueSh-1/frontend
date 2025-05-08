@@ -61,7 +61,6 @@ const Donations = React.lazy(()=> import('./views/pages/donations/donations'))
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/visits' , name: 'Events', element: Visits },
-  { path: '/users' , name: 'Users' , element: Users},
   { path: '/residents' , name: 'Residents' , element: Residents},
   { path: '/donations', name: 'Donations', element: Donations},
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
