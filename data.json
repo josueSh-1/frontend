@@ -1,29 +1,20 @@
 {
   "users": [
     {
-      "id": "426a",
-      "first_name": "Paleto",
-      "last_name": "Rodrigues",
-      "email": "parangaro@gmail.com",
-      "phone": "+58 555-1234",
-      "birth_date": "2002-02-20",
-      "password": "1234"
+      "id": "e42b",
+      "first_name": "luis",
+      "last_name": "contreras",
+      "email": "luisdavidcon14@gmail.com",
+      "phone": "+58 8949156"
     },
     {
-      "id": "cdc6",
+      "id": "7b69",
       "first_name": "Josue",
       "last_name": "Sandoval",
       "email": "josueshereira@gmail.com",
       "phone": "+58 4147283596",
       "birth_date": "2004-04-13",
-      "password": "0414"
-    },
-    {
-      "id": "2db7",
-      "first_name": "luis",
-      "last_name": "contreras",
-      "email": "luisdavidcon14@gmail.com",
-      "phone": "+58 8949156"
+      "password": "1234"
     }
   ],
   "residents": [],
@@ -67,6 +58,14 @@
       "description": "Cena en grupo",
       "start_time": "18:25",
       "end_time": "18:25"
+    },
+    {
+      "id": "ba9c",
+      "title": "",
+      "date": "2025-05-05",
+      "description": "",
+      "start_time": "",
+      "end_time": ""
     }
   ]
 }

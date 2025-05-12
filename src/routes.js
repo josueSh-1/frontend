@@ -62,6 +62,7 @@ const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/visits' , name: 'Events', element: Visits },
   { path: '/residents' , name: 'Residents' , element: Residents},
+  { path: '/users', name: 'Users', element: Users},
   { path: '/donations', name: 'Donations', element: Donations},
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
