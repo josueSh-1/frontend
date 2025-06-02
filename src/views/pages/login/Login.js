@@ -25,8 +25,8 @@ import afueras from '../../../assets/images/afueras.jpg'
 
 const Login = () => {
   const navigate = useNavigate()
-  const[visible,setVisible]=useState(false)
-  const[visible2,setVisible2]=useState(false)
+  const[forgot,setForgot]=useState(false)
+  const[linkForgot,setLinkForgot]=useState(false)
 
   return (
     <div className="min-vh-100 d-flex flex-row align-items-center"
@@ -42,9 +42,6 @@ const Login = () => {
               <CCard className="p-4">
                 <CCardBody>
                      <CForm >
-                     <div className='d-flex justify-content-end'>
-                       <CIcon icon={cilX} size='xl' onClick={() =>navigate('/')} className='x_nav'></CIcon>
-                     </div>
                      <h1>Login</h1>
                      <p className="text-body-secondary">Sign In to your account</p>
                      <CInputGroup className="mb-3">
@@ -71,7 +68,7 @@ const Login = () => {
                          </CButton>
                        </CCol>
                        <CCol xs={6} className='text-end'>
-                         <CButton color="link" onClick={() => setVisible(true)}>
+                         <CButton color="link" onClick={() => setForgot(true)}>
                            Forgot password?
                          </CButton>
                        </CCol>
@@ -92,8 +89,8 @@ const Login = () => {
         </CRow>
       </CContainer>
       <CModal
-        visible={visible}
-        onClose={() => setVisible(false)}
+        visible={forgot}
+        onClose={() => setForgot(false)}
         aria-labelledby="Modal_Password">
         <CModalHeader>
           <CModalTitle id="Modal_Password">Forgot Password</CModalTitle>
@@ -111,8 +108,8 @@ const Login = () => {
           <CButton
             color="primary"
             onClick={() => {
-              setVisible(false)
-              setVisible2(true)
+              setForgot(false)
+              setLinkForgot(true)
             }}
           >
             Send Link
@@ -120,15 +117,14 @@ const Login = () => {
         </CModalFooter>
       </CModal>
       <CModal
-        visible={visible2}
+        visible={linkForgot}
         onClick={() => {
-          setVisible(true)
-          setVisible2(false)
+          setForgot(true)
+          setLinkForgot(false)
         }}
-        aria-labelledby="ToggleBetweenModalsExample2"
       >
         <CModalHeader>
-          <CModalTitle id="ToggleBetweenModalsExample2">Your Reset Link Password was sending to you!</CModalTitle>
+          <CModalTitle>Your Reset Link Password was sending to you!</CModalTitle>
         </CModalHeader>
         <CModalBody>
           <p>Please check your email to access the link.</p>
@@ -137,8 +133,8 @@ const Login = () => {
           <CButton
             color="primary"
             onClick={() => {
-              setVisible(true)
-              setVisible2(false)
+              setForgot(true)
+              setLinkForgot(false)
             }}
           >
             Close

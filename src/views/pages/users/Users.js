@@ -5,9 +5,9 @@ import { CCard, CCardHeader ,CCardBody, CPagination, CPaginationItem, CButton, C
 import axios from 'axios'
 
 const Users = () => {
-    const[visible,setVisible]=useState(false)
-    const[visible2,setVisible2]=useState(false)
-    const[visible3,setVisible3]=useState(false)
+    const[deleteModal,setDeleteModal]=useState(false)
+    const[editModal,setEditModal]=useState(false)
+    const[createModal,setCreateModal]=useState(false)
     const[phoneCode, setPhoneCode]=useState('+58')
     const[search,setSearch]=useState('')
     const [newUser,setNewUser]=useState({
@@ -29,18 +29,21 @@ const Users = () => {
         {  key: 'last_name', label: 'Last Name', _props: { scope: 'col', className:'fs-4'  },},
         {  key: 'email', label: 'Email', _props: { scope: 'col', className:'fs-4'  }, },
         {  key: 'phone', label: 'Cellphone', _props: { scope: 'col', className:'fs-4' }, },
+        {  key: 'BirthDate', label: 'BirthDate', _props: { scope: 'col', className:'fs-4' }, },
         {  key: 'actions', label: '', _props: {scope: 'col', className:'fs-4' }, },
       ]
   
       
     const handleEditClick=(users)=>{
         setSelectUser({...users})
-        setVisible2(true)
+        editModal(true)
     }
+
     const handleDeleteClick=(users)=>{
         setSelectUser({...users})
-        setVisible(true)
+        deleteModal(true)
     }
+
     const handleCreateClick=()=>{
       setNewUser({
         first_name:'',
@@ -48,28 +51,31 @@ const Users = () => {
         email:'',
         phone:''
       })
-      setVisible3(true)
+      createModal(true)
     }
+
     const handleDeleteAction= async()=>{
       try{
         await axios.delete(`http://localhost:3001/users/${selectUser.id}`)
         setUsers(users.filter((users) => users.id !== selectUser.id))
-        setVisible(false)
+        deleteModal(false)
         setSelectUser(null)
       }catch(error){
         console.error('Error deleting: ', error)
       }
     }
+
     const handleEditAction= async()=>{
       try{
         const response = await axios.put(`http://localhost:3001/users/${selectUser.id}`, selectUser)
         setUsers(users.map((users)=> users.id === selectUser.id ? response.data: users))
-        setVisible2(false)
+        editModal(false)
         setSelectUser(null)
       }catch(error){
         console.error("Error Editing: ",error)
       } 
     }
+
     const handleCreateAction= async()=>{
       const fulldata = {...newUser, phone: `${phoneCode} ${newUser.phone}`}
       try{
@@ -96,7 +102,7 @@ const Users = () => {
           password: '',
         })
       }
-      setVisible3(false)
+      createModal(false)
     }
 
     const searching = users.filter(users =>
@@ -109,7 +115,7 @@ const Users = () => {
   return (
     <CCard>
     <CCardHeader className='d-flex justify-content-between align-items-center'>
-        <h1>List of Users</h1>
+        <h1>Users</h1>
         <CButton onClick={handleCreateClick} color='info' variant='outline'>
           <CIcon icon={cilUser} size='lg'/> Add +</CButton>
     </CCardHeader>
@@ -148,7 +154,7 @@ const Users = () => {
         </CPaginationItem>
       </CPagination>
       </div>
-      <CModal visible={visible} onClose={()=> setVisible(false)} backdrop="static">
+      <CModal visible={deleteModal} onClose={()=> setDeleteModal(false)} backdrop="static">
         <CModalHeader className="bg-primary text-white">
           <h5 className="modal-title">You want delete this User?</h5>
           </CModalHeader>
@@ -162,8 +168,8 @@ const Users = () => {
         </CModalBody>
       </CModal>
       <CModal 
-        visible={visible2} 
-        onClose={() => setVisible2(false)}
+        visible={editModal} 
+        onClose={() => setEditModal(false)}
         alignment="center"
         backdrop="static"
       >
@@ -196,7 +202,7 @@ const Users = () => {
       )}
       </CModalBody>
       <CModalFooter className="border-top-0">
-        <CButton color="secondary" onClick={() => setVisible2(false)}>
+        <CButton color="secondary" onClick={() => setEditModal(false)}>
           Cancel
         </CButton>
         <CButton color="primary" onClick={handleEditAction}>
@@ -205,8 +211,8 @@ const Users = () => {
       </CModalFooter>
       </CModal>
       <CModal 
-        visible={visible3} 
-        onClose={() => setVisible3(false)}
+        visible={createModal} 
+        onClose={() => setCreateModal(false)}
         alignment="center"
         backdrop="static"
       >
@@ -260,7 +266,7 @@ const Users = () => {
         </CForm>
         </CModalBody>
         <CModalFooter className="border-top-0">
-          <CButton color="secondary" onClick={() => setVisible3(false)}>
+          <CButton color="secondary" onClick={() => setCreateModal(false)}>
             Cancel
           </CButton>
           <CButton color="primary" onClick={handleCreateAction}>

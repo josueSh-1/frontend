@@ -88,9 +88,6 @@ const handleCreateAction= async(e) =>{
             <CCard className="mx-4">
               <CCardBody className="p-4">
                 <CForm onSubmit={handleCreateAction}>
-                  <div className='d-flex justify-content-end'>
-                   <CIcon icon={cilX} size='xl' onClick={() =>navigate('/')} className='x_nav' ></CIcon>
-                  </div>
                   <h1>Register</h1>
                   <p className="text-body-secondary">Create your account</p>
                   <CInputGroup className="mb-3">

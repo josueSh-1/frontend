@@ -8,7 +8,7 @@ import { CModal, CModalHeader, CModalBody, CModalFooter, CButton, CForm, CFormIn
 
 
 const Visits = () => {
-  const [visible, setVisible] = useState(false)
+  const [eventModal, setEventModal] = useState(false)
   const [newEvent,setNewEvent]=useState({
     title:'',
     date:'',
@@ -22,7 +22,7 @@ const Visits = () => {
   const handleDateClick = (arg) => {
     //Guardado de fecha seleccionada
     setNewEvent({...newEvent, date: arg.dateStr})
-    setVisible(true); 
+    setEventModal(true); 
   }
   const handleCreateEvent = async() => {
     try{
@@ -32,7 +32,7 @@ const Visits = () => {
     }
     setEvents([...events, newEvent])
     setNewEvent({title:'', date:'', description:'', start_time:'', end_time:''})
-    setVisible(false)
+    setEventModal(false)
   }
   return (
     <>
@@ -44,7 +44,7 @@ const Visits = () => {
         eventContent={renderEventContent}
         events={events} 
       />
-      <CModal visible={visible} onClose={() => setVisible(false)}>
+      <CModal visible={eventModal} onClose={() => setEventModal(false)}>
         <CModalHeader><h2>Creating a New Event</h2></CModalHeader>
         <CModalBody>
           <CForm>

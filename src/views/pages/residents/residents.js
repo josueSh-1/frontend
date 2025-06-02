@@ -8,8 +8,8 @@ import axios from "axios"
 
 const Residents= () =>{
     
-    const [visible,setVisible]=useState(false)
-    const [visible2, setVisible2] = useState(false)
+    const [modalRegis,setModalRegis]=useState(false)
+    const [infoRes, setInfoRes] = useState(false)
     const [selectResident,setSelectResident] = useState(null)
     const [search,setSearch]=useState('')
     const [residents,setResidents]=useState([])
@@ -31,10 +31,12 @@ const Residents= () =>{
             setNewResident({...newResident, photo: imageURL})
         }
     }
+
     const handleInfoAction=(residents)=>{
         setSelectResident({...residents})
-        setVisible2(true)
+        setInfoRes(true)
     }
+
     const handleAddCreate= async()=>{
         try{
             const response = await axios.post('http://localhost:3001/residents', newResident)
@@ -49,8 +51,9 @@ const Residents= () =>{
         }catch(error){
             console.error('Error creating resident: ', error)
         }
-        setVisible(false)
+        setModalRegis(false)
     }
+
     const handleDeleteAction= async()=>{
         try{
             const response = await axios.delete(`http://localhost:3001/residents/${selectResident.id}`)
@@ -59,8 +62,9 @@ const Residents= () =>{
         }catch(error){
             console.error('Error deleting: ', error)
         }
-        setVisible2(false)
+        setInfoRes(false)
     }
+
     const searching = residents.filter(residents=>
         residents.first_name.toLowerCase().includes(search.toLowerCase()) ||
         residents.last_name.toLowerCase().includes(search.toLowerCase())
@@ -83,7 +87,7 @@ const Residents= () =>{
             <CCardBody>
                 <CRow xs={{ cols: 1 }} md={{ cols: 3 }} className="g-5">
                     <CCol xs>
-                        <CCard className="h-100 card_resident" onClick={()=>setVisible(true)}> 
+                        <CCard className="h-100 card_resident" onClick={()=>setModalRegis(true)}> 
                         <CCardHeader><h4> ADD a Resident</h4></CCardHeader>
                         <CCardBody>
                         <CCardTitle> 
@@ -119,8 +123,8 @@ const Residents= () =>{
             </CCardBody>
             </CCard>
             <CModal 
-                visible={visible} 
-                onClose={() => setVisible(false)}
+                visible={modalRegis} 
+                onClose={() => setModalRegis(false)}
                 alignment="center"
                 backdrop="static"
             >
@@ -177,7 +181,7 @@ const Residents= () =>{
             </CForm>
             </CModalBody>
             <CModalFooter className="border-top-0">
-                <CButton color="secondary" onClick={() => setVisible(false)}>
+                <CButton color="secondary" onClick={() => setModalRegis(false)}>
                     Cancel
                 </CButton>
                 <CButton 
@@ -190,8 +194,8 @@ const Residents= () =>{
             </CModalFooter>
             </CModal>
             <CModal 
-                visible={visible2} 
-                onClose={() => setVisible2(false)}
+                visible={setInfoRes} 
+                onClose={() => setInfoRes(false)}
                 alignment="center"
             >
             <CModalHeader className="bg-primary text-white">
@@ -237,7 +241,7 @@ const Residents= () =>{
             </CModalBody>
             <CModalFooter className="border-top-0 justify-content-center">
             <CButton color="danger" onClick={() => handleDeleteAction(residents)}> Delete </CButton>
-            <CButton color="secondary" onClick={() => setVisible2(false)}> Close </CButton>
+            <CButton color="secondary" onClick={() => setInfoRes(false)}> Close </CButton>
             </CModalFooter>
             </CModal>
         </div>
