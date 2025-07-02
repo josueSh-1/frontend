@@ -17,7 +17,7 @@ import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser, cilX, cilCalendar } from '@coreui/icons'
 import afueras from '../../../assets/images/afueras.jpg'
 import '../../../scss/style.scss'
-import axios from 'axios'
+import api from '../../../api/axiosToken'
 
 const Register = () => {
   const navigate = useNavigate();
@@ -50,7 +50,7 @@ const handleCreateAction= async(e) =>{
   if(passwordMatch){
     const fulldata ={ ...newUser, phone: `${phoneCode} ${newUser.phone}`}
     try{
-      const response = await axios.post('http://localhost:4000/users', fulldata)
+      const response = await api.post('/register', fulldata)
       console.log('Response data: ', response.data)      
       setNewUser({
         first_name: '',

@@ -2,7 +2,6 @@ import React, {useEffect, useState } from 'react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import axios from 'axios'
 import { CModal, CModalHeader, CModalBody, CModalFooter, CButton, CForm, CFormInput, CFormTextarea, CPopover  } from '@coreui/react'
 import api from '../../../api/axiosToken'
 
