@@ -22,11 +22,31 @@ import CIcon from '@coreui/icons-react'
 import { cilEnvelopeLetter, cilLockLocked, cilUser, cilX } from '@coreui/icons'
 import '../../../scss/style.scss'
 import afueras from '../../../assets/images/afueras.jpg'
+import axios from 'axios'
 
 const Login = () => {
   const navigate = useNavigate()
   const[forgot,setForgot]=useState(false)
   const[linkForgot,setLinkForgot]=useState(false)
+  const[email, setEmail] = useState('')
+  const[password, setPassword] = useState('')
+  const[error, setError] = useState('')
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError('')
+    try {
+      const response = await axios.post('http://localhost:4000/login', {
+        email,
+        password
+      })
+      localStorage.setItem('token', response.data.token)
+      localStorage.setItem('user', JSON.stringify(response.data.user))
+      navigate('/residents')
+    } catch (err) {
+      setError('Credenciales incorrectas o error de servidor')
+    }
+  }
 
   return (
     <div className="min-vh-100 d-flex flex-row align-items-center"
@@ -41,14 +61,15 @@ const Login = () => {
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                     <CForm >
+                     <CForm onSubmit={handleSubmit}>
                      <h1>Login</h1>
                      <p className="text-body-secondary">Sign In to your account</p>
+                     {error && <div className="alert alert-danger py-2">{error}</div>}
                      <CInputGroup className="mb-3">
                        <CInputGroupText>
                          <CIcon icon={cilUser} />
                        </CInputGroupText>
-                       <CFormInput type="email" placeholder="Email" autoComplete="email" required/>
+                       <CFormInput type="email" placeholder="Email" autoComplete="email" required value={email} onChange={e => setEmail(e.target.value)}/>
                      </CInputGroup>
                      <CInputGroup className="mb-4">
                        <CInputGroupText>
@@ -59,6 +80,8 @@ const Login = () => {
                          placeholder="Password"
                          autoComplete="current-password"
                          required
+                         value={password}
+                         onChange={e => setPassword(e.target.value)}
                        />
                      </CInputGroup>
                      <CRow>

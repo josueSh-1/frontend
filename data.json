@@ -5,7 +5,8 @@
       "first_name": "luis",
       "last_name": "contreras",
       "email": "luisdavidcon14@gmail.com",
-      "phone": "+58 8949156"
+      "phone": "+58 8949156",
+      "birth_date": "2025-07-03"
     },
     {
       "id": "7b69",
@@ -13,7 +14,7 @@
       "last_name": "Sandoval",
       "email": "josueshereira@gmail.com",
       "phone": "+58 4147283596",
-      "birth_date": "2004-04-13",
+      "birth_date": "2004-04-09",
       "password": "1234"
     }
   ],

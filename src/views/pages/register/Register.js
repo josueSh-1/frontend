@@ -50,7 +50,7 @@ const handleCreateAction= async(e) =>{
   if(passwordMatch){
     const fulldata ={ ...newUser, phone: `${phoneCode} ${newUser.phone}`}
     try{
-      const response = await axios.post('http://localhost:3001/users', fulldata)
+      const response = await axios.post('http://localhost:4000/users', fulldata)
       console.log('Response data: ', response.data)      
       setNewUser({
         first_name: '',

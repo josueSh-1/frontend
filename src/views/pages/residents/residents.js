@@ -13,7 +13,7 @@ const Residents= () =>{
     const [selectResident,setSelectResident] = useState(null)
     const [search,setSearch]=useState('')
     const [residents,setResidents]=useState([])
-    useEffect(()=>{axios.get('http://localhost:3001/residents').then(response=>setResidents(response.data)).catch(error=>console.error('Error carga: ',error))}, 
+    useEffect(()=>{axios.get('http://localhost:4000/residents').then(response=>setResidents(response.data)).catch(error=>console.error('Error carga: ',error))}, 
     [])
     const [newResident, setNewResident]=useState({
         first_name: '',
@@ -39,7 +39,7 @@ const Residents= () =>{
 
     const handleAddCreate= async()=>{
         try{
-            const response = await axios.post('http://localhost:3001/residents', newResident)
+            const response = await axios.post('http://localhost:4000/residents', newResident)
             setResidents([...residents, response.data])
             setNewResident({
                 first_name: '',
@@ -56,7 +56,7 @@ const Residents= () =>{
 
     const handleDeleteAction= async()=>{
         try{
-            const response = await axios.delete(`http://localhost:3001/residents/${selectResident.id}`)
+            const response = await axios.delete(`http://localhost:4000/residents/${selectResident.id}`)
             setResidents(residents.filter((resident)=>resident.id!==selectResident.id))
             setSelectResident(null)
         }catch(error){

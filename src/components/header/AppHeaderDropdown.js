@@ -27,10 +27,6 @@ const AppHeaderDropdown = () => {
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
         <CDropdownHeader className="bg-body-secondary fw-semibold my-2">Settings</CDropdownHeader>
-        <CDropdownItem  onClick={() => navigate('/login')} style={{ cursor: 'pointer'}}>
-          <CIcon icon={cilUserPlus} className="me-2" />
-          Sign up/Log in
-        </CDropdownItem>
         <CDropdownItem href="#">
           <CIcon icon={cilUser} className="me-2" />
           Profile
@@ -40,7 +36,7 @@ const AppHeaderDropdown = () => {
           Payments
         </CDropdownItem>
         <CDropdownDivider />
-        <CDropdownItem href="#">
+        <CDropdownItem onClick={() => navigate('/login')} style={{ cursor: 'pointer'}}>
           <CIcon icon={cilLockLocked} className="me-2" />
           Lock Account
         </CDropdownItem>

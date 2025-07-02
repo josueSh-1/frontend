@@ -16,32 +16,36 @@ const Users = () => {
       email:'',
       phone:'',
       birth_date:'',
-      password:''
+      password:'',
+      role: 'user',
     })
     //Seleccion de Usuario Vacia
     const[selectUser,setSelectUser]=useState(null)
     //Arreglo de Usuarios
     const[users,setUsers]=useState([])
     //Carga de usuarios una vez
-    useEffect(()=>{ axios.get('http://localhost:3001/users').then(response=>setUsers(response.data)).catch(error=>console.error("Error: ",error))},[])
+    useEffect(()=>{ axios.get('http://localhost:4000/users').then(response=>setUsers(response.data)).catch(error=>console.error("Error: ",error))},[])
     const columns = [
         {  key: 'first_name', label: 'First Name',_props: { scope: 'col', className:'fs-4' }, },
         {  key: 'last_name', label: 'Last Name', _props: { scope: 'col', className:'fs-4'  },},
         {  key: 'email', label: 'Email', _props: { scope: 'col', className:'fs-4'  }, },
         {  key: 'phone', label: 'Cellphone', _props: { scope: 'col', className:'fs-4' }, },
-        {  key: 'BirthDate', label: 'BirthDate', _props: { scope: 'col', className:'fs-4' }, },
+        {  key: 'birth_date', label: 'BirthDate', _props: { scope: 'col', className:'fs-4' }, },
+        {  key: 'role', label: 'Role', _props: { scope: 'col', className:'fs-4' }, },
         {  key: 'actions', label: '', _props: {scope: 'col', className:'fs-4' }, },
       ]
   
       
     const handleEditClick=(users)=>{
-        setSelectUser({...users})
-        editModal(true)
+        const [phoneCode, phoneNumber] = users.phone.split(' ')
+        setPhoneCode(phoneCode);
+        setSelectUser({ ...users, phone: phoneNumber });
+        setEditModal(true);
     }
 
     const handleDeleteClick=(users)=>{
         setSelectUser({...users})
-        deleteModal(true)
+        setDeleteModal(true)
     }
 
     const handleCreateClick=()=>{
@@ -49,16 +53,19 @@ const Users = () => {
         first_name:'',
         last_name:'',
         email:'',
-        phone:''
+        phone:'',
+        birth_date:'',
+        password:'',
+        role: 'user',
       })
-      createModal(true)
+      setCreateModal(true)
     }
 
     const handleDeleteAction= async()=>{
       try{
-        await axios.delete(`http://localhost:3001/users/${selectUser.id}`)
+        await axios.delete(`http://localhost:4000/users/${selectUser.id}`)
         setUsers(users.filter((users) => users.id !== selectUser.id))
-        deleteModal(false)
+        setDeleteModal(false)
         setSelectUser(null)
       }catch(error){
         console.error('Error deleting: ', error)
@@ -66,10 +73,11 @@ const Users = () => {
     }
 
     const handleEditAction= async()=>{
+      const fulldata = { ...selectUser, phone: `${phoneCode} ${selectUser.phone}` };
       try{
-        const response = await axios.put(`http://localhost:3001/users/${selectUser.id}`, selectUser)
+        const response = await axios.put(`http://localhost:4000/users/${selectUser.id}`, fulldata)
         setUsers(users.map((users)=> users.id === selectUser.id ? response.data: users))
-        editModal(false)
+        setEditModal(false)
         setSelectUser(null)
       }catch(error){
         console.error("Error Editing: ",error)
@@ -80,7 +88,7 @@ const Users = () => {
       const fulldata = {...newUser, phone: `${phoneCode} ${newUser.phone}`}
       try{
         console.log('Phone: ', fulldata)
-        const response = await axios.post('http://localhost:3001/users', fulldata)
+        const response = await axios.post('http://localhost:4000/users', fulldata)
         console.log('Response data: ', response.data)      
         setUsers([...users, response.data])
         setNewUser({
@@ -102,22 +110,30 @@ const Users = () => {
           password: '',
         })
       }
-      createModal(false)
+      setCreateModal(false)
     }
 
     const searching = users.filter(users =>
       users.first_name?.toLowerCase().includes(search.toLowerCase()) ||
       users.last_name?.toLowerCase().includes(search.toLowerCase()) ||
       users.email?.toLowerCase().includes(search.toLowerCase()) ||
-      users.phone?.toLowerCase().includes(search)
+      users.phone?.toLowerCase().includes(search.toLowerCase()) || 
+      users.birth_date?.toLowerCase().includes(search.toLowerCase())
     )
+
+    // Render role as text in the table
+    const getRoleName = (role) => {
+      if (role === 1) return 'Admin';
+      if (role === 2) return 'Nurse';
+      return 'User';
+    };
 
   return (
     <CCard>
     <CCardHeader className='d-flex justify-content-between align-items-center'>
         <h1>Users</h1>
         <CButton onClick={handleCreateClick} color='info' variant='outline'>
-          <CIcon icon={cilUser} size='lg'/> Add +</CButton>
+        <CIcon icon={cilUser} size='lg'/> Add +</CButton>
     </CCardHeader>
     <CCardHeader>
       <div className='d-flex justify-content-end'>
@@ -130,16 +146,20 @@ const Users = () => {
       </div>
     </CCardHeader>
       <CCardBody>
-        <CTable columns={columns} items={searching.map(users =>(
-            {...users,
+        <CTable 
+          columns={columns} 
+          items={searching.map(users => ({
+            ...users,
+            role: getRoleName(users.role),
             actions: (
-                <div className='d-flex gap-3'>
-                <CButton color='primary'  onClick={()=>handleEditClick(users)}>Edit</CButton>
-                <CButton color='danger'  onClick={()=>handleDeleteClick(users)}>Delete</CButton>
-                </div>
-            )}))}
-            striped hover responsive align='middle' className='mb-0'
-            />
+              <div className='d-flex gap-3'>
+                <CButton color='primary' onClick={() => handleEditClick(users)}>Edit</CButton>
+                <CButton color='danger' onClick={() => handleDeleteClick(users)}>Delete</CButton>
+              </div>
+            )
+          }))}
+          striped hover responsive align='middle' className='mb-0'
+        />
       </CCardBody>
       <div className='d-flex justify-content-center'>
       <CPagination size="lg" aria-label='Page navigation example' className='content-align-center' onClick={handleEditClick} style={{cursor:'pointer'}}>
@@ -198,6 +218,43 @@ const Users = () => {
             onChange={(e) => setSelectUser({ ...selectUser, email: e.target.value })}
             className="mb-3"
           />
+          <CFormInput
+            label="Birthdate"
+            type="date"
+            value={selectUser.birth_date}
+            onChange={(e) => setSelectUser({...selectUser, birth_date: e.target.value})}
+            className="mb-3"
+          />
+          <div className="mb-3">
+            <CFormLabel>Role</CFormLabel>
+            <CFormSelect
+              value={selectUser.role || 3}
+              onChange={e => setSelectUser({ ...selectUser, role: Number(e.target.value) })}
+            >
+              <option value={1}>Admin</option>
+              <option value={2}>Nurse</option>
+              <option value={3}>User</option>
+            </CFormSelect>
+          </div>
+          <div className="mb-3">
+            <CFormLabel>Phone number</CFormLabel>
+            <CInputGroup>
+            <CFormSelect 
+              value={phoneCode} 
+              onChange={(e) => setPhoneCode(e.target.value)}
+              style={{maxWidth: '100px'}}>
+              <option value="+58">+58 (VE)</option>
+              <option value="+57">+57 (CO)</option>
+            </CFormSelect>
+            <CFormInput
+              placeholder="Enter phone number"
+              value={selectUser.phone}
+              onChange={(e) => setSelectUser({...selectUser, phone: e.target.value})}
+              feedbackInvalid="Please provide a valid phone number."
+              valid={selectUser.phone.length > 5}
+            />
+            </CInputGroup>
+          </div>
         </CForm>
       )}
       </CModalBody>
@@ -243,14 +300,31 @@ const Users = () => {
             onChange={(e) => setNewUser({...newUser, email: e.target.value})}
             className="mb-3"
           />
+          <CFormInput
+            label="Birthdate"
+            type="date"
+            value={newUser.birth_date}
+            onChange={(e) => setNewUser({...newUser, birth_date: e.target.value})}
+            className="mb-3"
+          />
+          <div className="mb-3">
+            <CFormLabel>Role</CFormLabel>
+            <CFormSelect
+              value={newUser.role}
+              onChange={e => setNewUser({ ...newUser, role: Number(e.target.value) })}
+            >
+              <option value={1}>Admin</option>
+              <option value={2}>Nurse</option>
+              <option value={3}>User</option>
+            </CFormSelect>
+          </div>
           <div className="mb-3">
             <CFormLabel>Phone number</CFormLabel>
             <CInputGroup>
             <CFormSelect 
               value={phoneCode} 
               onChange={(e) => setPhoneCode(e.target.value)}
-              style={{maxWidth: '100px'}}
-            >
+              style={{maxWidth: '100px'}}>
               <option value="+58">+58 (VE)</option>
               <option value="+57">+57 (CO)</option>
             </CFormSelect>
