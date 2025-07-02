@@ -3,7 +3,7 @@ import CIcon from '@coreui/icons-react'
 import { cilSearch } from '@coreui/icons'
 import { CCard, CCardBody, CCardFooter, CRow, CCardImage, CCol, CCardText, CCardTitle, CCardHeader, CModal, CModalHeader, CModalBody, CModalFooter, CForm, CFormInput,CFormTextarea, CButton, CInputGroupText} from '@coreui/react'
 import '../../../scss/style.scss'
-import axios from "axios"
+import api from '../../../api/axiosToken'
 
 
 const Residents= () =>{
@@ -13,7 +13,7 @@ const Residents= () =>{
     const [selectResident,setSelectResident] = useState(null)
     const [search,setSearch]=useState('')
     const [residents,setResidents]=useState([])
-    useEffect(()=>{axios.get('http://localhost:4000/residents').then(response=>setResidents(response.data)).catch(error=>console.error('Error carga: ',error))}, 
+    useEffect(()=>{api.get('/residents').then(response=>setResidents(response.data)).catch(error=>console.error('Error carga: ',error))}, 
     [])
     const [newResident, setNewResident]=useState({
         first_name: '',
@@ -39,7 +39,7 @@ const Residents= () =>{
 
     const handleAddCreate= async()=>{
         try{
-            const response = await axios.post('http://localhost:4000/residents', newResident)
+            const response = await api.post('/residents', newResident)
             setResidents([...residents, response.data])
             setNewResident({
                 first_name: '',
@@ -56,7 +56,7 @@ const Residents= () =>{
 
     const handleDeleteAction= async()=>{
         try{
-            const response = await axios.delete(`http://localhost:4000/residents/${selectResident.id}`)
+            const response = await api.delete(`/residents/${selectResident.id}`)
             setResidents(residents.filter((resident)=>resident.id!==selectResident.id))
             setSelectResident(null)
         }catch(error){

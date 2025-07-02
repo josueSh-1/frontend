@@ -22,7 +22,7 @@ import CIcon from '@coreui/icons-react'
 import { cilEnvelopeLetter, cilLockLocked, cilUser, cilX } from '@coreui/icons'
 import '../../../scss/style.scss'
 import afueras from '../../../assets/images/afueras.jpg'
-import axios from 'axios'
+import api from '../../../api/axiosToken'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -36,15 +36,14 @@ const Login = () => {
     e.preventDefault()
     setError('')
     try {
-      const response = await axios.post('http://localhost:4000/login', {
+      const response = await api.post('/login', {
         email,
         password
       })
       localStorage.setItem('token', response.data.token)
-      localStorage.setItem('user', JSON.stringify(response.data.user))
       navigate('/residents')
     } catch (err) {
-      setError('Credenciales incorrectas o error de servidor')
+      setError('Credenciales incorrectas')
     }
   }
 

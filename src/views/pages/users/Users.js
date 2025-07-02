@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import CIcon from '@coreui/icons-react'
 import { cilSearch, cilUser } from '@coreui/icons'
 import { CCard, CCardHeader ,CCardBody, CPagination, CPaginationItem, CButton, CTable, CModal, CModalHeader, CModalBody, CModalFooter,CForm, CFormInput, CInputGroupText, CFormSelect, CInputGroup, CFormLabel } from '@coreui/react'
-import axios from 'axios'
+import api from '../../../api/axiosToken'
 
 const Users = () => {
     const[deleteModal,setDeleteModal]=useState(false)
@@ -24,7 +24,7 @@ const Users = () => {
     //Arreglo de Usuarios
     const[users,setUsers]=useState([])
     //Carga de usuarios una vez
-    useEffect(()=>{ axios.get('http://localhost:4000/users').then(response=>setUsers(response.data)).catch(error=>console.error("Error: ",error))},[])
+    useEffect(()=>{ api.get('/users').then(response=>setUsers(response.data)).catch(error=>console.error("Error: ",error))},[])
     const columns = [
         {  key: 'first_name', label: 'First Name',_props: { scope: 'col', className:'fs-4' }, },
         {  key: 'last_name', label: 'Last Name', _props: { scope: 'col', className:'fs-4'  },},
@@ -63,7 +63,7 @@ const Users = () => {
 
     const handleDeleteAction= async()=>{
       try{
-        await axios.delete(`http://localhost:4000/users/${selectUser.id}`)
+        await api.delete(`/users/${selectUser.id}`)
         setUsers(users.filter((users) => users.id !== selectUser.id))
         setDeleteModal(false)
         setSelectUser(null)
@@ -75,7 +75,7 @@ const Users = () => {
     const handleEditAction= async()=>{
       const fulldata = { ...selectUser, phone: `${phoneCode} ${selectUser.phone}` };
       try{
-        const response = await axios.put(`http://localhost:4000/users/${selectUser.id}`, fulldata)
+        const response = await api.put(`/users/${selectUser.id}`, fulldata)
         setUsers(users.map((users)=> users.id === selectUser.id ? response.data: users))
         setEditModal(false)
         setSelectUser(null)
@@ -88,7 +88,7 @@ const Users = () => {
       const fulldata = {...newUser, phone: `${phoneCode} ${newUser.phone}`}
       try{
         console.log('Phone: ', fulldata)
-        const response = await axios.post('http://localhost:4000/users', fulldata)
+        const response = await api.post('/users', fulldata)
         console.log('Response data: ', response.data)      
         setUsers([...users, response.data])
         setNewUser({

@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react'
 import { CCard, CCardBody, CRow, CCol } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilUser, cilHome } from '@coreui/icons'
-import axios from 'axios'
+import api from '../../api/axiosToken'
 
 const Dashboard = () => {
   const [users, setUsers] = useState([])
   const [residents, setResidents] = useState([])
 
   useEffect(() => {
-    axios.get('http://localhost:4000/users')
+    api.get('/users')
       .then(response => setUsers(response.data))
       .catch(err => console.error('Error users: ', err))
-    axios.get('http://localhost:4000/residents')
+    api.get('/residents')
       .then(response => setResidents(response.data))
       .catch(err => console.error('Error residents: ', err))
   }, [])

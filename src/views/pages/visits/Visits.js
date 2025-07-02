@@ -4,6 +4,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import axios from 'axios'
 import { CModal, CModalHeader, CModalBody, CModalFooter, CButton, CForm, CFormInput, CFormTextarea, CPopover  } from '@coreui/react'
+import api from '../../../api/axiosToken'
 
 
 
@@ -18,7 +19,7 @@ const Visits = () => {
   })
   const [events, setEvents] = useState([ ])
   // Hook para cargar eventos desde la API al montar el componente
-  useEffect(()=>{axios.get('http://localhost:4000/events').then(response=>setEvents(response.data)).catch(error=>console.error("Error ",error))},[])
+  useEffect(()=>{api.get('/events').then(response=>setEvents(response.data)).catch(error=>console.error("Error ",error))},[])
   const handleDateClick = (arg) => {
     //Guardado de fecha seleccionada
     setNewEvent({...newEvent, date: arg.dateStr})
@@ -26,7 +27,7 @@ const Visits = () => {
   }
   const handleCreateEvent = async() => {
     try{
-      const response = await axios.post('http://localhost:4000/events',newEvent)
+      const response = await api.post('/events',newEvent)
     }catch(error){
       console.error("Error Creating event: ", error)
     }
