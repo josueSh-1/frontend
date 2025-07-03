@@ -20,6 +20,19 @@ const Residents= () =>{
     const [selectResident,setSelectResident] = useState(null)
     const [search,setSearch]=useState('')
     const [residents,setResidents]=useState([])
+
+    const getUserRoleName = (roleId) => {
+        const roles = {
+            1: 'admin',
+            2: 'nurse',
+            3: 'user'
+        };
+        return roles[roleId] || 'user';
+    };
+
+    const userRoleId = localStorage.getItem('user_role');
+    const currentUserRole = getUserRoleName(userRoleId);
+
     useEffect(()=>{api.get('/residents').then(response=>setResidents(response.data)).catch(error=>console.error('Error carga: ',error))}, 
     [])
     const [newResident, setNewResident]=useState({
@@ -93,7 +106,8 @@ const Residents= () =>{
             </CCardHeader>
             <CCardBody>
                 <CRow xs={{ cols: 1 }} md={{ cols: 3 }} className="g-5">
-                    <CCol xs>
+                    {(currentUserRole === 'admin' || currentUserRole === 'nurse') && (
+                        <CCol xs>
                         <CCard className="h-100 card_resident" onClick={()=>setModalRegis(true)}> 
                         <CCardHeader><h4> ADD a Resident</h4></CCardHeader>
                         <CCardBody>
@@ -111,6 +125,7 @@ const Residents= () =>{
                         </CCardFooter>
                         </CCard>
                     </CCol>
+                    )}
                     {searching.map((resident) =>
                       <CCol xs key={resident.id || resident.id_resident}>
                         <CCard className="h-100 card_resident" onClick={() => handleInfoAction(resident)}>

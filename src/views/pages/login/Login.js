@@ -48,6 +48,8 @@ const Login = () => {
       })
       localStorage.setItem('token', response.data.token)
       localStorage.setItem('user', JSON.stringify(response.data.user))
+      localStorage.setItem('user_role', String(response.data.user.role)) 
+      console.log(response.data.user)
       navigate('/residents')
     } catch (err) {
       setError('Credenciales incorrectas')

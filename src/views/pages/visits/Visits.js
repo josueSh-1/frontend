@@ -17,13 +17,24 @@ const Visits = () => {
     end_time: ''
   })
   const [events, setEvents] = useState([])
-  const [eventOptions, setEventOptions] = useState([]) // lista de eventos base para el select
+  const [eventOptions, setEventOptions] = useState([])
+
+  const getUserRoleName = (roleId) => {
+        const roles = {
+            1: 'admin',
+            2: 'nurse',
+            3: 'user'
+        };
+        return roles[roleId] || 'user';
+    };
+
+    const userRoleId = localStorage.getItem('user_role');
+    const currentUserRole = getUserRoleName(userRoleId);
+
   // Hook para cargar eventos desde events_log y eventos base al montar el componente
   useEffect(() => {
-    // Cargar eventos completos desde el nuevo endpoint
     api.get('/event_log/full')
       .then(res => {
-        // El backend ya trae todo: title, description, first_name, last_name, etc.
         const eventsFull = res.data.map(ev => ({
           ...ev,
           title: ev.title,
@@ -58,16 +69,11 @@ const Visits = () => {
 
   const handleCreateEvent = async () => {
     try {
-      // Ya no se crea el evento base aquí, solo se usa el seleccionado
       const eventId = newEvent.title; // el value del select es el id del evento base
-
-      // Obtener el usuario actual desde localStorage (ya decodificado)
       let fk_user = null;
       let creator_name = '';
       try {
         const user = JSON.parse(localStorage.getItem('user'));
-        console.log('USER LOCALSTORAGE:', user);
-        // Ajusta aquí según la estructura real del objeto user
         fk_user = user?.id || user?.id_user || null;
         creator_name = `${user?.first_name || ''} ${user?.last_name || ''}`.trim();
         if (!fk_user) {
@@ -77,12 +83,10 @@ const Visits = () => {
       }catch(e){
         fk_user = null;
         creator_name = '';
-        console.log(e)
         alert('Error obteniendo el usuario actual. Debes volver a iniciar sesión.', e);
         return;
       }
 
-      // 2. Crear el registro en events_log
       const logRes = await api.post('/event_log', {
         date: newEvent.date,
         start_time: newEvent.start_time,
@@ -91,11 +95,7 @@ const Visits = () => {
         fk_user: fk_user,
         creator_name: creator_name
       })
-
-      // Buscar el evento base para mostrar el título y descripción correctos
       const selectedEvent = eventOptions.find(ev => String(ev.id_event || ev.id) === String(eventId));
-
-      // 3. Actualizar el estado con el nuevo evento (incluye title, description y creator_name para el calendario)
       setEvents([
         ...events,
         {
@@ -131,7 +131,8 @@ const Visits = () => {
           }
         }))}
       />
-      <CModal visible={eventModal} onClose={() => setEventModal(false)}>
+      {(currentUserRole==='admin' || currentUserRole==='nurse') && (
+        <CModal visible={eventModal} onClose={() => setEventModal(false)}>
         <CModalHeader><h2>Creating a New Event</h2></CModalHeader>
         <CModalBody>
           <CForm>
@@ -178,7 +179,7 @@ const Visits = () => {
             Create an Event
           </CButton>
         </CModalFooter>
-      </CModal>
+      </CModal>)}
     </>
   );
 };
