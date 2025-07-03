@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import api from '../../../api/axiosToken';
 import {
   CCard,
   CCardBody,
@@ -15,12 +16,32 @@ const DonationForm = () => {
   const [amount, setAmount] = useState('');
   const [name, setName] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
-    setAmount('');
-    setName('');
+    setError('');
+    try {
+      // Obtener el usuario actual
+      const user = JSON.parse(localStorage.getItem('user'));
+      const fk_id_user = user.id_user || user.id;
+      if (!fk_id_user) {
+        setError('No se pudo identificar el usuario.');
+        return;
+      }
+      // Prueba 1: solo fecha (YYYY-MM-DD)
+      const donation = {
+        amount: Number(amount),
+        donation_date: new Date().toISOString().slice(0, 10),
+        fk_id_user: Number(fk_id_user)
+      };
+      await api.post('/donation', donation);
+      setSubmitted(true);
+      setAmount('');
+      setName('');
+    } catch (err) {
+      setError('Error al guardar la donación.');
+    }
   };
 
   return (
@@ -29,6 +50,7 @@ const DonationForm = () => {
         <CCardHeader className="donation-header">Make a Contribution</CCardHeader>
         <CCardBody>
           {submitted && <CAlert color="success">Thanks for your donation!</CAlert>}
+          {error && <CAlert color="danger">{error}</CAlert>}
           <CForm onSubmit={handleSubmit}>
             <div className="donation-field">
               <CFormLabel>Amount (USD)</CFormLabel>

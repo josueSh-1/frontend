@@ -15,9 +15,9 @@ const Users = () => {
       last_name:'',
       email:'',
       phone:'',
-      birth_date:'',
+      status:'',
       password:'',
-      role: 'user',
+      fk_id_role: 3,
     })
     //Seleccion de Usuario Vacia
     const[selectUser,setSelectUser]=useState(null)
@@ -30,21 +30,25 @@ const Users = () => {
         {  key: 'last_name', label: 'Last Name', _props: { scope: 'col', className:'fs-4'  },},
         {  key: 'email', label: 'Email', _props: { scope: 'col', className:'fs-4'  }, },
         {  key: 'phone', label: 'Cellphone', _props: { scope: 'col', className:'fs-4' }, },
-        {  key: 'birth_date', label: 'BirthDate', _props: { scope: 'col', className:'fs-4' }, },
-        {  key: 'role', label: 'Role', _props: { scope: 'col', className:'fs-4' }, },
+        {  key: 'status', label: 'Status', _props: { scope: 'col', className:'fs-4' }, },
+        {  key: 'fk_id_role', label: 'Role', _props: { scope: 'col', className:'fs-4' }, },
         {  key: 'actions', label: '', _props: {scope: 'col', className:'fs-4' }, },
       ]
   
       
+
     const handleEditClick=(users)=>{
         const [phoneCode, phoneNumber] = users.phone.split(' ')
         setPhoneCode(phoneCode);
-        setSelectUser({ ...users, phone: phoneNumber });
+        // Map id_user to id for consistency, and ensure fk_id_role is present
+        setSelectUser({ ...users, id: users.id_user, phone: phoneNumber, fk_id_role: users.fk_id_role ?? 3 });
         setEditModal(true);
     }
 
+
     const handleDeleteClick=(users)=>{
-        setSelectUser({...users})
+        // Map id_user to id for consistency
+        setSelectUser({ ...users, id: users.id_user})
         setDeleteModal(true)
     }
 
@@ -54,9 +58,9 @@ const Users = () => {
         last_name:'',
         email:'',
         phone:'',
-        birth_date:'',
+        status:'',
         password:'',
-        role: 'user',
+        fk_id_role: 3,
       })
       setCreateModal(true)
     }
@@ -64,7 +68,7 @@ const Users = () => {
     const handleDeleteAction= async()=>{
       try{
         await api.delete(`/users/${selectUser.id}`)
-        setUsers(users.filter((users) => users.id !== selectUser.id))
+        setUsers(users.filter((users) => users.id_user !== selectUser.id_user))
         setDeleteModal(false)
         setSelectUser(null)
       }catch(error){
@@ -73,10 +77,14 @@ const Users = () => {
     }
 
     const handleEditAction= async()=>{
-      const fulldata = { ...selectUser, phone: `${phoneCode} ${selectUser.phone}` };
+      // Elimina el campo id antes de enviar al backend
+      const { id, ...rest } = selectUser;
+      // Elimina role si existe y asegura que fk_id_role es número
+      const { role, ...restNoRole } = rest;
+      const fulldata = { ...restNoRole, phone: `${phoneCode} ${selectUser.phone}`, fk_id_role: Number(rest.fk_id_role) };
       try{
-        const response = await api.put(`/users/${selectUser.id}`, fulldata)
-        setUsers(users.map((users)=> users.id === selectUser.id ? response.data: users))
+        const response = await api.put(`/users/${selectUser.id_user}`, fulldata)
+        setUsers(users.map((users)=> users.id_user === selectUser.id_user ? response.data: users))
         setEditModal(false)
         setSelectUser(null)
       }catch(error){
@@ -85,7 +93,9 @@ const Users = () => {
     }
 
     const handleCreateAction= async()=>{
-      const fulldata = {...newUser, phone: `${phoneCode} ${newUser.phone}`}
+      // Elimina role si existe y asegura que fk_id_role es número
+      const { role, ...restNoRole } = newUser;
+      const fulldata = { ...restNoRole, phone: `${phoneCode} ${newUser.phone}`, fk_id_role: Number(newUser.fk_id_role) }
       try{
         console.log('Phone: ', fulldata)
         const response = await api.post('/users', fulldata)
@@ -96,17 +106,21 @@ const Users = () => {
           last_name: '',
           email:'',
           phone:'',
-          birth_date:'',
+          status:'',
           password: '',
         })
       }catch (error){
-        console.error('Error creating account: ', error)   
+        console.error('Error creating account: ', error);
+        if (error.response) {
+          console.error('Backend response:', error.response);
+          console.error('Backend data:', error.response.data);
+        }
         setNewUser({
           first_name: '',
           last_name: '',
           email:'',
           phone:'',
-          birth_date:'',
+          status:'',
           password: '',
         })
       }
@@ -118,13 +132,13 @@ const Users = () => {
       users.last_name?.toLowerCase().includes(search.toLowerCase()) ||
       users.email?.toLowerCase().includes(search.toLowerCase()) ||
       users.phone?.toLowerCase().includes(search.toLowerCase()) || 
-      users.birth_date?.toLowerCase().includes(search.toLowerCase())
+      users.status?.toLowerCase().includes(search.toLowerCase())
     )
 
     // Render role as text in the table
-    const getRoleName = (role) => {
-      if (role === 1) return 'Admin';
-      if (role === 2) return 'Nurse';
+    const getRoleName = (fk_id_role) => {
+      if (fk_id_role === 1) return 'Admin';
+      if (fk_id_role === 2) return 'Nurse';
       return 'User';
     };
 
@@ -150,7 +164,7 @@ const Users = () => {
           columns={columns} 
           items={searching.map(users => ({
             ...users,
-            role: getRoleName(users.role),
+            fk_id_role: getRoleName(users.fk_id_role),
             actions: (
               <div className='d-flex gap-3'>
                 <CButton color='primary' onClick={() => handleEditClick(users)}>Edit</CButton>
@@ -219,17 +233,17 @@ const Users = () => {
             className="mb-3"
           />
           <CFormInput
-            label="Birthdate"
-            type="date"
-            value={selectUser.birth_date}
-            onChange={(e) => setSelectUser({...selectUser, birth_date: e.target.value})}
+            label="Status"
+            placeholder="Enter status"
+            value={selectUser.status}
+            onChange={(e) => setSelectUser({...selectUser, status: e.target.value})}
             className="mb-3"
           />
           <div className="mb-3">
             <CFormLabel>Role</CFormLabel>
             <CFormSelect
-              value={selectUser.role || 3}
-              onChange={e => setSelectUser({ ...selectUser, role: Number(e.target.value) })}
+              value={selectUser.fk_id_role || 3}
+              onChange={e => setSelectUser({ ...selectUser, fk_id_role: Number(e.target.value) })}
             >
               <option value={1}>Admin</option>
               <option value={2}>Nurse</option>
@@ -248,10 +262,10 @@ const Users = () => {
             </CFormSelect>
             <CFormInput
               placeholder="Enter phone number"
-              value={selectUser.phone}
+              value={selectUser.phone || ''}
               onChange={(e) => setSelectUser({...selectUser, phone: e.target.value})}
               feedbackInvalid="Please provide a valid phone number."
-              valid={selectUser.phone.length > 5}
+              valid={(selectUser.phone || '').length > 5}
             />
             </CInputGroup>
           </div>
@@ -301,17 +315,26 @@ const Users = () => {
             className="mb-3"
           />
           <CFormInput
-            label="Birthdate"
-            type="date"
-            value={newUser.birth_date}
-            onChange={(e) => setNewUser({...newUser, birth_date: e.target.value})}
+            type="password"
+            label="Password"
+            placeholder="Password"
+            autoComplete="current-password"
+            required
+            value={newUser.password}
+            onChange={e => setNewUser({...newUser, password: e.target.value})}
+          />
+          <CFormInput
+            label="Status"
+            placeholder="Enter status"
+            value={newUser.status.toLowerCase()}
+            onChange={(e) => setNewUser({...newUser, status: e.target.value})}
             className="mb-3"
           />
           <div className="mb-3">
             <CFormLabel>Role</CFormLabel>
             <CFormSelect
-              value={newUser.role}
-              onChange={e => setNewUser({ ...newUser, role: Number(e.target.value) })}
+              value={newUser.fk_id_role}
+              onChange={e => setNewUser({ ...newUser, fk_id_role: Number(e.target.value) })}
             >
               <option value={1}>Admin</option>
               <option value={2}>Nurse</option>

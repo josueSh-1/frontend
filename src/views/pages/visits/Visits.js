@@ -9,29 +9,106 @@ import api from '../../../api/axiosToken'
 
 const Visits = () => {
   const [eventModal, setEventModal] = useState(false)
-  const [newEvent,setNewEvent]=useState({
-    title:'',
-    date:'',
-    description:'', 
-    start_time:'', 
-    end_time:''
+  const [newEvent, setNewEvent] = useState({
+    title: '',
+    date: '',
+    description: '',
+    start_time: '',
+    end_time: ''
   })
-  const [events, setEvents] = useState([ ])
-  // Hook para cargar eventos desde la API al montar el componente
-  useEffect(()=>{api.get('/events').then(response=>setEvents(response.data)).catch(error=>console.error("Error ",error))},[])
+  const [events, setEvents] = useState([])
+  const [eventOptions, setEventOptions] = useState([]) // lista de eventos base para el select
+  // Hook para cargar eventos desde events_log y eventos base al montar el componente
+  useEffect(() => {
+    // Cargar eventos completos desde el nuevo endpoint
+    api.get('/event_log/full')
+      .then(res => {
+        // El backend ya trae todo: title, description, first_name, last_name, etc.
+        const eventsFull = res.data.map(ev => ({
+          ...ev,
+          title: ev.title,
+          description: ev.description,
+          creator_name: `${ev.first_name || ''} ${ev.last_name || ''}`.trim()
+        }));
+        setEvents(eventsFull);
+      })
+      .catch(error => console.error("Error cargando eventos: ", error));
+
+    // Cargar eventos base para el select
+    api.get('/event')
+      .then(response => setEventOptions(response.data))
+      .catch(error => console.error("Error cargando eventos base: ", error));
+  }, [])
+
   const handleDateClick = (arg) => {
-    //Guardado de fecha seleccionada
-    setNewEvent({...newEvent, date: arg.dateStr})
-    setEventModal(true); 
+    setNewEvent({ title: '', date: arg.dateStr, description: '', start_time: '', end_time: '' })
+    setEventModal(true)
   }
-  const handleCreateEvent = async() => {
-    try{
-      const response = await api.post('/events',newEvent)
-    }catch(error){
+
+  // Cuando el usuario selecciona un evento base, actualiza el título y la descripción
+  const handleEventSelect = (e) => {
+    const selectedId = e.target.value;
+    const selectedEvent = eventOptions.find(ev => String(ev.id_event || ev.id) === String(selectedId));
+    setNewEvent({
+      ...newEvent,
+      title: selectedId,
+      description: selectedEvent ? selectedEvent.description : ''
+    });
+  }
+
+  const handleCreateEvent = async () => {
+    try {
+      // Ya no se crea el evento base aquí, solo se usa el seleccionado
+      const eventId = newEvent.title; // el value del select es el id del evento base
+
+      // Obtener el usuario actual desde localStorage (ya decodificado)
+      let fk_user = null;
+      let creator_name = '';
+      try {
+        const user = JSON.parse(localStorage.getItem('user'));
+        console.log('USER LOCALSTORAGE:', user);
+        // Ajusta aquí según la estructura real del objeto user
+        fk_user = user?.id || user?.id_user || null;
+        creator_name = `${user?.first_name || ''} ${user?.last_name || ''}`.trim();
+        if (!fk_user) {
+          alert('No se pudo obtener el id del usuario. Revisa la estructura del objeto user en localStorage.');
+          throw new Error 
+        }
+      }catch(e){
+        fk_user = null;
+        creator_name = '';
+        console.log(e)
+        alert('Error obteniendo el usuario actual. Debes volver a iniciar sesión.', e);
+        return;
+      }
+
+      // 2. Crear el registro en events_log
+      const logRes = await api.post('/event_log', {
+        date: newEvent.date,
+        start_time: newEvent.start_time,
+        end_time: newEvent.end_time,
+        fk_id_event: eventId,
+        fk_user: fk_user,
+        creator_name: creator_name
+      })
+
+      // Buscar el evento base para mostrar el título y descripción correctos
+      const selectedEvent = eventOptions.find(ev => String(ev.id_event || ev.id) === String(eventId));
+
+      // 3. Actualizar el estado con el nuevo evento (incluye title, description y creator_name para el calendario)
+      setEvents([
+        ...events,
+        {
+          ...logRes.data,
+          title: selectedEvent ? selectedEvent.title : '',
+          description: selectedEvent ? selectedEvent.description : '',
+          creator_name: creator_name
+        }
+      ])
+    } catch (error) {
       console.error("Error Creating event: ", error)
     }
-    setEvents([...events, newEvent])
-    setNewEvent({title:'', date:'', description:'', start_time:'', end_time:''})
+    setNewEvent({ title: '', date: '', description: '', start_time: '', end_time: '' })
     setEventModal(false)
   }
   return (
@@ -42,24 +119,40 @@ const Visits = () => {
         weekends={false}
         dateClick={handleDateClick}
         eventContent={renderEventContent}
-        events={events} 
+        events={events.map(ev => ({
+          title: ev.title,
+          start: ev.date,
+          end: ev.date,
+          extendedProps: {
+            description: ev.description,
+            start_time: ev.start_time,
+            end_time: ev.end_time,
+            creator_name: ev.creator_name
+          }
+        }))}
       />
       <CModal visible={eventModal} onClose={() => setEventModal(false)}>
         <CModalHeader><h2>Creating a New Event</h2></CModalHeader>
         <CModalBody>
           <CForm>
-            <CFormInput
-              label="Event Title"
-              type="text"
-              placeholder="title"
+            <label className="form-label">Event Title</label>
+            <select
+              className="form-select mb-4"
               value={newEvent.title}
-              onChange={(e) => setNewEvent({...newEvent, title: e.target.value})}
-              className='mb-4'
-            />
+              onChange={handleEventSelect}
+              required
+            >
+              <option value="">Select an event...</option>
+              {eventOptions.map(ev => (
+                <option key={ev.id_event || ev.id} value={ev.id_event || ev.id}>
+                  {ev.title}
+                </option>
+              ))}
+            </select>
             <CFormTextarea
               label="Description"
               value={newEvent.description}
-              onChange={(e) => setNewEvent({...newEvent, description: e.target.value})}
+              readOnly
               rows={4}
               className='mb-4'
             />
@@ -92,8 +185,9 @@ const Visits = () => {
 
 // Función para renderizar el contenido de los eventos
 function renderEventContent(eventInfo) {
-  const startTime = eventInfo.event.extendedProps.start_time
-  const endTime = eventInfo.event.extendedProps.end_time
+  const startTime = eventInfo.event.extendedProps.start_time;
+  const endTime = eventInfo.event.extendedProps.end_time;
+  const creatorName = eventInfo.event.extendedProps.creator_name;
   return (
     <CPopover
       placement="right"
@@ -104,6 +198,7 @@ function renderEventContent(eventInfo) {
           <p><b>Date:</b> {eventInfo.event.start.toLocaleDateString()}</p>
           <p><b>Time:</b> {startTime} - {endTime}</p>
           <p><b>Description:</b> {eventInfo.event.extendedProps.description}</p>
+          <p><b>Creado por:</b> {creatorName}</p>
         </div>
       }
     >

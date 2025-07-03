@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   CButton,
@@ -26,6 +26,12 @@ import api from '../../../api/axiosToken'
 
 const Login = () => {
   const navigate = useNavigate()
+  useEffect(() => {
+    localStorage.removeItem('token');
+  }, []);
+  useEffect(()=>{
+    localStorage.removeItem('user')
+  },[])
   const[forgot,setForgot]=useState(false)
   const[linkForgot,setLinkForgot]=useState(false)
   const[email, setEmail] = useState('')
@@ -41,6 +47,7 @@ const Login = () => {
         password
       })
       localStorage.setItem('token', response.data.token)
+      localStorage.setItem('user', JSON.stringify(response.data.user))
       navigate('/residents')
     } catch (err) {
       setError('Credenciales incorrectas')

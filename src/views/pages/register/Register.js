@@ -31,7 +31,6 @@ const Register = () => {
     last_name: '',
     email:'',
     phone:'',
-    birth_date:'',
     password: '',
   })
   
@@ -48,7 +47,17 @@ const handleCreateAction= async(e) =>{
     setPasswordMatch(true)
   }
   if(passwordMatch){
-    const fulldata ={ ...newUser, phone: `${phoneCode} ${newUser.phone}`}
+    // Envía los campos requeridos y los valores por defecto de role y status
+    const { first_name, last_name, email, phone, password } = newUser;
+    const fulldata = {
+      first_name,
+      last_name,
+      email,
+      phone: `${phoneCode} ${phone}`,
+      password,
+      fk_id_role: 3, // valor por defecto
+      status: 'active' // valor por defecto
+    };
     try{
       const response = await api.post('/register', fulldata)
       console.log('Response data: ', response.data)      
@@ -57,7 +66,6 @@ const handleCreateAction= async(e) =>{
         last_name: '',
         email:'',
         phone:'',
-        birth_date:'',
         password: '',
       })
       setConfirmPassword('')
@@ -70,7 +78,6 @@ const handleCreateAction= async(e) =>{
         last_name: '',
         email:'',
         phone:'',
-        birth_date:'',
         password: '',
       })
     }
@@ -128,16 +135,7 @@ const handleCreateAction= async(e) =>{
                     onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })}
                   />
                   </CInputGroup>
-                  <CInputGroup className="mb-3">
-                    <CInputGroupText>
-                      <CIcon icon={cilCalendar}/>
-                    </CInputGroupText>
-                  <CFormInput type="date"
-                    value={newUser.birth_date || ''}
-                    onChange={(e)=>setNewUser({...newUser, birth_date:e.target.value})}
-                  />
-                  <p className='small text-muted'>Enter your birth date</p>
-                  </CInputGroup>
+                  {/* Birth date input removed as requested */}
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
                       <CIcon icon={cilLockLocked} />

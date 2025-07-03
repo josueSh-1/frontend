@@ -36,7 +36,9 @@ const AppHeaderDropdown = () => {
           Payments
         </CDropdownItem>
         <CDropdownDivider />
-        <CDropdownItem onClick={() => navigate('/login')} style={{ cursor: 'pointer'}}>
+        <CDropdownItem onClick={() => { localStorage.removeItem('token'); 
+          navigate('/login');}} 
+          style={{ cursor: 'pointer'}}>
           <CIcon icon={cilLockLocked} className="me-2" />
           Lock Account
         </CDropdownItem>

@@ -7,6 +7,13 @@ import api from '../../../api/axiosToken'
 
 
 const Residents= () =>{
+    // Utilidad para formatear fechas tipo 1940-11-30T06:00:00.000Z a YYYY-MM-DD
+    function formatDate(dateString) {
+        if (!dateString) return '';
+        const d = new Date(dateString);
+        if (isNaN(d)) return dateString;
+        return d.toISOString().slice(0, 10);
+    }
     
     const [modalRegis,setModalRegis]=useState(false)
     const [infoRes, setInfoRes] = useState(false)
@@ -56,8 +63,8 @@ const Residents= () =>{
 
     const handleDeleteAction= async()=>{
         try{
-            const response = await api.delete(`/residents/${selectResident.id}`)
-            setResidents(residents.filter((resident)=>resident.id!==selectResident.id))
+            const response = await api.delete(`/residents/${selectResident.id_resident}`)
+            setResidents(residents.filter((resident)=>resident.id_resident!==selectResident.id_resident))
             setSelectResident(null)
         }catch(error){
             console.error('Error deleting: ', error)
@@ -104,20 +111,20 @@ const Residents= () =>{
                         </CCardFooter>
                         </CCard>
                     </CCol>
-                    {searching.map((resident)=>
-                     <CCol xs>
-                      <CCard className="h-100 card_resident" onClick={()=>handleInfoAction(resident)}> 
-                         <CCardHeader><h4>{resident.first_name} {resident.last_name}</h4></CCardHeader>
-                         <CCardBody>
-                         <CCardImage 
-                            src={resident.photo}
-                         />
-                        </CCardBody>
-                         <CCardFooter>
-                           <small className="text-body-secondary">In the geriatric since: {resident.admission_date} </small>
-                         </CCardFooter>
-                         </CCard>
-                     </CCol>
+                    {searching.map((resident) =>
+                      <CCol xs key={resident.id || resident.id_resident}>
+                        <CCard className="h-100 card_resident" onClick={() => handleInfoAction(resident)}>
+                          <CCardHeader><h4>{resident.first_name} {resident.last_name}</h4></CCardHeader>
+                          <CCardBody>
+                            <CCardImage
+                              src={resident.photo}
+                            />
+                          </CCardBody>
+                          <CCardFooter>
+                            <small className="text-body-secondary">In the geriatric since: {formatDate(resident.admission_date)} </small>
+                          </CCardFooter>
+                        </CCard>
+                      </CCol>
                     )}
                 </CRow>
             </CCardBody>
@@ -194,7 +201,7 @@ const Residents= () =>{
             </CModalFooter>
             </CModal>
             <CModal 
-                visible={setInfoRes} 
+                visible={infoRes} 
                 onClose={() => setInfoRes(false)}
                 alignment="center"
             >
@@ -223,11 +230,11 @@ const Residents= () =>{
                     <div className="text-start mx-auto" style={{ maxWidth: '400px' }}>
                     <div className="d-flex justify-content-between border-bottom py-2">
                         <span className="fw-bold">Birthdate:</span>
-                        <p>{selectResident.birthdate}</p>
+                        <p>{formatDate(selectResident.birthdate)}</p>
                     </div>
                     <div className="d-flex justify-content-between border-bottom py-2">
                         <span className="fw-bold">Admission Date:</span>
-                        <p>{selectResident.admission_date}</p>
+                        <p>{formatDate(selectResident.admission_date)}</p>
                     </div>
                     <div className="mt-3">
                         <h6 className="fw-bold">Biography:</h6>
